@@ -12,7 +12,7 @@ This is the improved version of the  <a href=https://github.com/OzgurYatmaz/Firi
 ### How to test api
 1. Use the Mockoon collection provided to mock sample external payment service providers
 
-2. Use the url below or provided postman collection provided in API-Documents folder  <br>
+2. Use the url below to test with swagger <br>
    http://localhost:8080/swagger-ui/index.html
  
 
@@ -23,4 +23,5 @@ Framework: Spring Boot 3.2.5 <br>
 Database: MySql <br>
 DB Management: Spring Data JPA <br>
 Unit Tests: JUnit and Maven Surefire for functionality coverage test reports <br>
+Documentation: Swagger
 Build Tool: Maven 

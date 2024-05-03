@@ -8,7 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.multipay.error.RecordsNotBeingFetchedException;
+
+import com.multipay.customer.service.error.RecordsNotBeingFetchedException;
 import com.multipay.model.Payment;
 import com.multipay.repository.PaymentRepository;
 

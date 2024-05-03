@@ -1,14 +1,14 @@
-package com.multipay.error;
+package com.multipay.customer.service.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-public class RecordsNotBeingFetchedException extends RuntimeException {
+@ResponseStatus(code = HttpStatus.BAD_GATEWAY)
+public class PaymentServiceProviderException extends RuntimeException {
 
 	private String errorDetail;
 
-	public RecordsNotBeingFetchedException(String message, String errorDetail) {
+	public PaymentServiceProviderException(String message, String errorDetail) {
 		super(message);
 		this.errorDetail = errorDetail;
 	}

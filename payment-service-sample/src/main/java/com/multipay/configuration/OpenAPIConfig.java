@@ -43,7 +43,7 @@ public class OpenAPIConfig {
         .version("1.0")
         .contact(contact)
         .description("This API exposes endpoints to use sample payment service. Service anables saving customers and cards of the customers to mysql database "
-        		+ "and requesting payments to any external payment service providers. And if external payment service"
+        		+ "and requesting payments to any number of external payment service providers. And if external payment service"
         		+ " confirms that the payment is made card balance is updated and payment is recorded to payments table."
         		+ " Lastly, all payments can be queried by date interval or curtomer number or card number.<br />\r\n"
         		+ "     <br /> Tech Stack:\r\n"

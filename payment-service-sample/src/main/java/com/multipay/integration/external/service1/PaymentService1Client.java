@@ -20,10 +20,10 @@ import com.multipay.beans.ProcessPaymentRequest;
 import com.multipay.beans.ProcessPaymentResponse;
 import com.multipay.beans.ResponseHeader;
 import com.multipay.configuration.PaymentServiceConfig;
-import com.multipay.error.ExternalServiceException;
-import com.multipay.error.TechnicalException;
+import com.multipay.customer.service.error.ExternalServiceException;
 import com.multipay.model.Card;
 import com.multipay.model.Payment;
+import com.multipay.model.TechnicalException;
 import com.multipay.repository.CardRepository;
 import com.multipay.repository.PaymentRepository;
 
@@ -34,7 +34,6 @@ public class PaymentService1Client {
 
 	@Autowired
 	private PaymentServiceConfig configParameters;
-
 	@Autowired
 	private CardRepository cardRepository;
 
@@ -47,19 +46,19 @@ public class PaymentService1Client {
 		objectMapper = new ObjectMapper();
 	}
 
-	public ProcessPaymentResponse processPayment(ProcessPaymentRequest paymentRequest) throws TechnicalException {
+	public ProcessPaymentResponse processPayment(ProcessPaymentRequest paymentRequest, Card card) throws TechnicalException {
 		// Fetch the card by cardNumber
-		if (!cardRepository.existsByCardNumber(paymentRequest.getCardNumber())) {
-			throw new TechnicalException(MessageEnums.INVALID_CARD_NUMBER.getWsCode(),
-					"Card number " + paymentRequest.getCardNumber() + " is not associated with any customer");
-		}
-
-		Card card = cardRepository.findByCardNumber(paymentRequest.getCardNumber()).get(0);
-
-		if (card.getBalance() < paymentRequest.getAmount()) {
-			throw new TechnicalException(MessageEnums.LIMIT_EXCEED.getWsCode(), "Insuffucient balance",
-					"Insuffucient balance2");
-		}
+//		if (!cardRepository.existsByCardNumber(paymentRequest.getCardNumber())) {
+//			throw new TechnicalException(MessageEnums.INVALID_CARD_NUMBER.getWsCode(),
+//					"Card number " + paymentRequest.getCardNumber() + " is not associated with any customer");
+//		}
+//
+//		Card card = cardRepository.findByCardNumber(paymentRequest.getCardNumber()).get(0);
+//
+//		if (card.getBalance() < paymentRequest.getAmount()) {
+//			throw new TechnicalException(MessageEnums.LIMIT_EXCEED.getWsCode(), "Insuffucient balance",
+//					"Insuffucient balance2");
+//		}
 		// create an object for external service's request body. This is just dummy
 		Payment payment = prepareExternalRequest(paymentRequest, card);
 

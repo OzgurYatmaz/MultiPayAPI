@@ -1,4 +1,4 @@
-package com.multipay.error;
+package com.multipay.customer.service.error;
 import java.time.LocalDateTime;
 
 import io.swagger.v3.oas.annotations.media.Schema;

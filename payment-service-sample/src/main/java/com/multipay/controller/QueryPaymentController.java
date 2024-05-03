@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.multipay.error.ErrorDetails;
+import com.multipay.customer.service.error.ErrorDetails;
 import com.multipay.model.Payment;
 import com.multipay.service.PaymentService;
 
@@ -22,10 +22,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "Payment controller", description = "Make  and query payments") // For Swagger
+@Tag(name = "Query Payment controller", description = "Make  and query payments") // For Swagger
 @RestController
 @RequestMapping("/payments")
-public class PaymentController {
+public class QueryPaymentController {
 
 	@Autowired
 	public PaymentService paymentService;

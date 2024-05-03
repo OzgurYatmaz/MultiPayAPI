@@ -1,15 +1,14 @@
-package com.multipay.error;
+package com.multipay.customer.service.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(code = HttpStatus.CONFLICT)
-public class DataInsertionConftlictException extends RuntimeException {
+@ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+public class ExternalServiceException extends RuntimeException {
 
 	private String errorDetail;
 
-	
-	public DataInsertionConftlictException(String message, String errorDetail) {
+	public ExternalServiceException(String message, String errorDetail) {
 		super(message);
 		this.errorDetail = errorDetail;
 	}

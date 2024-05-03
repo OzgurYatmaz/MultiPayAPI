@@ -10,8 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
+import com.multipay.beans.MessageEnums;
 import com.multipay.beans.ProcessPaymentRequest;
 import com.multipay.beans.ProcessPaymentResponse;
+import com.multipay.model.Card;
+import com.multipay.model.TechnicalException;
+import com.multipay.repository.CardRepository;
 import com.multipay.routing.dispatchers.MultiPayDispatcher;
 import com.multipay.routing.dispatchers.PaymentService1;
 import com.multipay.routing.dispatchers.PaymentService2;
@@ -26,7 +30,6 @@ public class RequestDistributor {
 	private ApplicationContext context;
 	
 	public List<MultiPayDispatcher> dispatchers;
-	
 	
 	
 	
@@ -56,8 +59,9 @@ public class RequestDistributor {
 	}
 
 	
-	public ProcessPaymentResponse startPayment(ProcessPaymentRequest startPaymentRequest) {
-		return getDispatcher(startPaymentRequest.getProviderId()).startPayment(startPaymentRequest);
+	public ProcessPaymentResponse startPayment(ProcessPaymentRequest paymentRequest, Card card)  {
+		
+		return getDispatcher(paymentRequest.getProviderId()).startPayment(paymentRequest, card);
 	}
 
 	 

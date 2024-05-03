@@ -10,8 +10,9 @@ import com.multipay.beans.MessageEnums;
 import com.multipay.beans.ProcessPaymentRequest;
 import com.multipay.beans.ProcessPaymentResponse;
 import com.multipay.beans.Response;
-import com.multipay.error.TechnicalException;
 import com.multipay.integration.external.service1.PaymentService1Client;
+import com.multipay.model.Card;
+import com.multipay.model.TechnicalException;
 
 @Component
 public class PaymentService1 extends AbstractDispatcher {
@@ -22,7 +23,7 @@ public class PaymentService1 extends AbstractDispatcher {
 	private PaymentService1Client paymentService1;
 
 	@Override
-	public ProcessPaymentResponse startPayment(ProcessPaymentRequest startPaymentRequest) {
+	public ProcessPaymentResponse startPayment(ProcessPaymentRequest startPaymentRequest, Card card) {
 		if (LOGGER.isInfoEnabled()) {
 			LOGGER.info("startPayment function started ");
 		}
@@ -30,7 +31,7 @@ public class PaymentService1 extends AbstractDispatcher {
 
 		ProcessPaymentResponse response = new ProcessPaymentResponse();
 		try {
-			response = paymentService1.processPayment(startPaymentRequest);
+			response = paymentService1.processPayment(startPaymentRequest, card);
 			setStatusAsSuccess(response, 1);
 		} catch (TechnicalException e) {
 			StringBuilder builder = new StringBuilder();

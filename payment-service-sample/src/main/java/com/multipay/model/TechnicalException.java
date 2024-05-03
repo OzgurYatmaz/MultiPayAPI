@@ -1,4 +1,4 @@
-package com.multipay.error;
+package com.multipay.model;
 
 public class TechnicalException extends Throwable {
 

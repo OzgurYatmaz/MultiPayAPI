@@ -1,4 +1,4 @@
-package com.multipay.error;
+package com.multipay.customer.service.error;
 
 import java.time.LocalDateTime;
 
@@ -86,4 +86,5 @@ public class ResponseErrorHandler extends ResponseEntityExceptionHandler {
 
 		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(), ex.getErrorDetail()), status);
 	}
+	
 }

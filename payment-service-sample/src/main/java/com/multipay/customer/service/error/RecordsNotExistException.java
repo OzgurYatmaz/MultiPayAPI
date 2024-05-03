@@ -1,14 +1,14 @@
-package com.multipay.error;
+package com.multipay.customer.service.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE)
-public class InsufficientCardBalanceException extends RuntimeException {
+@ResponseStatus(code = HttpStatus.NOT_FOUND)
+public class RecordsNotExistException extends RuntimeException {
 
 	private String errorDetail;
 
-	public InsufficientCardBalanceException(String message, String errorDetail) {
+	public RecordsNotExistException(String message, String errorDetail) {
 		super(message);
 		this.errorDetail = errorDetail;
 	}

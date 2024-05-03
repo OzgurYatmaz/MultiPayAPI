@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.multipay.error.DataInsertionConftlictException;
-import com.multipay.error.RecordCouldNotBeSavedException;
-import com.multipay.error.RecordsNotBeingFetchedException;
+import com.multipay.customer.service.error.DataInsertionConftlictException;
+import com.multipay.customer.service.error.RecordCouldNotBeSavedException;
+import com.multipay.customer.service.error.RecordsNotBeingFetchedException;
 import com.multipay.model.Card;
 import com.multipay.model.Customer;
 import com.multipay.repository.CardRepository;

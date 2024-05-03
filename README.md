@@ -1,4 +1,4 @@
-# Spring Boot Project simulating a payment service with multiple payment service provider
+# Spring Boot Project simulating a payment service with multiple payment service providers
   
 This is the improved version of the  <a href=https://github.com/OzgurYatmaz/FirisbeInterview>following</a> project 
 
@@ -10,7 +10,7 @@ This is the improved version of the  <a href=https://github.com/OzgurYatmaz/Firi
 
  
 ### How to test api
-1. Use the Mockoon collection provided to mock sample external payment service provider
+1. Use the Mockoon collection provided to mock sample external payment service providers
 
 2. Use the url below or provided postman collection provided in API-Documents folder  <br>
    http://localhost:8080/swagger-ui/index.html
@@ -22,5 +22,5 @@ Language: Java 17 <br>
 Framework: Spring Boot 3.2.5 <br>
 Database: MySql <br>
 DB Management: Spring Data JPA <br>
-Unit Tests: JUnit and Maven Surefire for functionality test reports <br>
+Unit Tests: JUnit and Maven Surefire for functionality coverage test reports <br>
 Build Tool: Maven 

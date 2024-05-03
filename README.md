@@ -1,6 +1,7 @@
-# Spring Boot Project simulating a payment service with multiple payment service providers
-  
-This is the improved version of the  <a href=https://github.com/OzgurYatmaz/FirisbeInterview>following</a> project 
+# Spring Boot Project simulating a payment api integrated with multiple mock payment service providers
+## (This Project is not completed yet)
+This is the improved version of the  <a href=https://github.com/OzgurYatmaz/FirisbeInterview>following</a> project. <br>
+In this version it is possible to send payment requests to many external payment service providers. 
 
 ### How to run the project
 

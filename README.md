@@ -17,12 +17,12 @@ In this version it is possible to send payment requests to many external payment
    http://localhost:8080/swagger-ui/index.html
  
 
-### Tech Stack
+### Tech Stack:
 
 Language: Java 17 <br>
 Framework: Spring Boot 3.2.5 <br>
 Database: MySql <br>
 DB Management: Spring Data JPA <br>
 Unit Tests: JUnit and Maven Surefire for functionality coverage test reports <br>
-Documentation: Swagger
+Documentation: Swagger  <br>
 Build Tool: Maven 

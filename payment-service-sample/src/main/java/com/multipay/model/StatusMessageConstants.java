@@ -1,4 +1,4 @@
-package com.multipay.utils;
+package com.multipay.model;
 public interface StatusMessageConstants {
 
 	public static final String SUCCESSFUL = "GBE-0000";

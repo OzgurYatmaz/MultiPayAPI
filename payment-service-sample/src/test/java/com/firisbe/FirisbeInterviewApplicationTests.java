@@ -23,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.multipay.beans.ProcessPaymentRequest;
+import com.multipay.controller.MultiPayRestService;
 import com.multipay.model.Card;
 import com.multipay.model.Customer;
 import com.multipay.model.Payment;
@@ -48,7 +49,7 @@ class FirisbeInterviewApplicationTests {
 	private CustomerService customerService;
 	
 	@Autowired
-	private RequestDistributor paymentService;
+	private MultiPayRestService paymentService;
 
     @BeforeAll
     @Transactional
@@ -129,7 +130,7 @@ class FirisbeInterviewApplicationTests {
 	}
 	
 	@Test
-	@DisplayName("Fetch all customers")
+	@DisplayName("Make Payment")
 	@Order(4)
 	void makePaymentTest() {
 		ProcessPaymentRequest r1 = new ProcessPaymentRequest();

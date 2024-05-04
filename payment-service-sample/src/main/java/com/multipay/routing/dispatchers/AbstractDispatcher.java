@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.multipay.beans.Response;
 import com.multipay.beans.ResponseHeader;
-import com.multipay.utils.StatusMessageConstants;
+import com.multipay.model.StatusMessageConstants;
 
 @Component
 public abstract class AbstractDispatcher implements MultiPayDispatcher{

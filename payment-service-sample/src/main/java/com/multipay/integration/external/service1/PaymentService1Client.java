@@ -20,7 +20,6 @@ import com.multipay.beans.ProcessPaymentRequest;
 import com.multipay.beans.ProcessPaymentResponse;
 import com.multipay.beans.ResponseHeader;
 import com.multipay.configuration.PaymentServiceConfig;
-import com.multipay.customer.service.error.ExternalServiceException;
 import com.multipay.model.Card;
 import com.multipay.model.Payment;
 import com.multipay.model.TechnicalException;
@@ -137,7 +136,7 @@ public class PaymentService1Client {
 	}
 
 	private ProcessPaymentResponse processExternalResponse(Payment payment, ResponseEntity<String> responseEntity,
-			Integer cardId, long responseTime) throws ExternalServiceException {
+			Integer cardId, long responseTime) {
 
 		ProcessPaymentResponse response = new ProcessPaymentResponse();
 		ResponseHeader header = new ResponseHeader();

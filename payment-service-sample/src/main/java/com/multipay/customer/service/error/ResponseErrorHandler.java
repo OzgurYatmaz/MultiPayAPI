@@ -51,40 +51,4 @@ public class ResponseErrorHandler extends ResponseEntityExceptionHandler {
 	}
 	
 	
-	@ExceptionHandler(RecordsNotExistException.class) // exception handled
-	public ResponseEntity<ErrorDetails> handleRecordCouldNotBeSavedException(RecordsNotExistException ex) {
-
-		HttpStatus status = HttpStatus.NOT_FOUND;
-
-		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(), ex.getErrorDetail()), status);
-	}
- 
-	
-	@ExceptionHandler(PaymentServiceProviderException.class) // exception handled
-	public ResponseEntity<ErrorDetails> handlePaymentServiceProviderException(PaymentServiceProviderException ex) {
-
-		HttpStatus status = HttpStatus.BAD_GATEWAY;
-
-		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(), ex.getErrorDetail()), status);
-	}
- 
-	
-	@ExceptionHandler(ExternalServiceException.class) // exception handled
-	public ResponseEntity<ErrorDetails> handleExternalServiceException(ExternalServiceException ex) {
-
-		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-
-		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(), ex.getErrorDetail()), status);
-	}
-	
-	
-	
-	@ExceptionHandler(InsufficientCardBalanceException.class) // exception handled
-	public ResponseEntity<ErrorDetails> handleExternalServiceException(InsufficientCardBalanceException ex) {
-
-		HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
-
-		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(), ex.getErrorDetail()), status);
-	}
-	
 }

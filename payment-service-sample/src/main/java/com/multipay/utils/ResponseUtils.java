@@ -2,18 +2,20 @@ package com.multipay.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Component;
 
 import com.multipay.beans.Response;
 import com.multipay.beans.ResponseHeader;
 import com.multipay.model.StatusMessageConstants;
 
+@Component
 public class ResponseUtils {
 
 
 	@Autowired
-	private static MessageSource messageSource;
+	private MessageSource messageSource;
 	
-	public static void setStatusAsSuccess(Response response, int providerId) {
+	public  void setStatusAsSuccess(Response response, int providerId) {
 		createResponseHeader(response);
 
 		response.getResponseHeader().setSuccessful(true);
@@ -24,16 +26,16 @@ public class ResponseUtils {
 	}
 	
 
-	public static void setStatusAsFailed(Response response, String error, Object[] args, int providerId) {
+	public void setStatusAsFailed(Response response, String error, Object[] args, int providerId) {
 		createResponseHeader(response);
 
 		response.getResponseHeader().setCode(error);
-		response.getResponseHeader().setDescription(messageSource.getMessage(error, args, "Default message", null));
+		response.getResponseHeader().setDescription(messageSource.getMessage(error, args, null, null));
 		response.getResponseHeader().setSuccessful(false);
 		response.setProviderId(providerId);
 	}
 
-	private static void createResponseHeader(Response response) {
+	private void createResponseHeader(Response response) {
 		if (response.getResponseHeader() == null) {
 			ResponseHeader responseHeader = new ResponseHeader();
 
@@ -41,7 +43,7 @@ public class ResponseUtils {
 		}
 	}
 	
-	public static void setResponseTime(Response response, long startTime, long finishTime) {
+	public  void setResponseTime(Response response, long startTime, long finishTime) {
 		createResponseHeader(response);
 		response.setTotalExecutionTime((finishTime == 0 ? System.currentTimeMillis() : finishTime) - startTime);
 	}

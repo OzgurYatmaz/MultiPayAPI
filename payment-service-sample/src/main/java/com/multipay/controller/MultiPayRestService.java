@@ -41,6 +41,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 public class MultiPayRestService {
 
+	@Autowired
+	private ResponseUtils responseUtils;
 	/**
 	 * 
 	 * Card related operations is done with this
@@ -84,7 +86,7 @@ public class MultiPayRestService {
 
 		ProcessPaymentResponse response = new ProcessPaymentResponse();
 		if (!cardRepository.existsByCardNumber(paymentRequest.getCardNumber())) {
-			ResponseUtils.setStatusAsFailed(response, MessageEnums.INVALID_CARD_NUMBER.getWsCode(), null,
+			responseUtils.setStatusAsFailed(response, MessageEnums.INVALID_CARD_NUMBER.getWsCode(), null,
 					paymentRequest.getProviderId());
 			return response;
 		}
@@ -92,7 +94,7 @@ public class MultiPayRestService {
 		Card card = cardRepository.findByCardNumber(paymentRequest.getCardNumber()).get(0);
 
 		if (card.getBalance() < paymentRequest.getAmount()) {
-			ResponseUtils.setStatusAsFailed(response, MessageEnums.LIMIT_EXCEED.getWsCode(), null,
+			responseUtils.setStatusAsFailed(response, MessageEnums.LIMIT_EXCEED.getWsCode(), null,
 					paymentRequest.getProviderId());
 			return response;
 		}

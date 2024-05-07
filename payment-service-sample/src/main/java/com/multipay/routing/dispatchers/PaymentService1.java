@@ -26,8 +26,7 @@ public class PaymentService1 extends AbstractDispatcher {
 	 */
 	@Autowired
 	private ResponseUtils responseUtils;
-	
-	
+
 	@Autowired
 	private PaymentService1Client paymentService1;
 
@@ -36,7 +35,6 @@ public class PaymentService1 extends AbstractDispatcher {
 		if (LOGGER.isInfoEnabled()) {
 			LOGGER.info("startPayment function started ");
 		}
-		long startTime = System.currentTimeMillis(), finishTime = 0;
 
 		ProcessPaymentResponse response = new ProcessPaymentResponse();
 		try {
@@ -53,8 +51,6 @@ public class PaymentService1 extends AbstractDispatcher {
 			LOGGER.error(builder.toString());
 //			LOGGER.error(e, e);
 
-			finishTime = System.currentTimeMillis();
-
 			Object[] errArgs = null;
 
 			if (StringUtils.isNotBlank(e.getWsExternalCode())) {
@@ -63,8 +59,7 @@ public class PaymentService1 extends AbstractDispatcher {
 				errArgs = new Object[] { e.getWsMessage() };
 			}
 			responseUtils.setStatusAsFailed(response,
-					MessageEnums.getServiceMessageEnumByWSCode(e.getWsCode()).getMessageCode(), errArgs,
-					1);
+					MessageEnums.getServiceMessageEnumByWSCode(e.getWsCode()).getMessageCode(), errArgs, 1);
 			if (StringUtils.isNotBlank(e.getWsExternalCode())) {
 				response.getResponseHeader().setCode(e.getWsExternalCode());
 			}
@@ -78,22 +73,15 @@ public class PaymentService1 extends AbstractDispatcher {
 
 			LOGGER.error(builder.toString());
 
-			finishTime = System.currentTimeMillis();
-
 			responseUtils.setStatusAsFailed(response, MessageEnums.COMMON_SERVICE_ERROR.getMessageCode(),
 					new Object[] { e.getMessage() }, 1);
-		} finally {
-			finishTime = System.currentTimeMillis();
-			responseUtils.setResponseTime(response, startTime, finishTime);
 		}
 
 		if (LOGGER.isInfoEnabled()) {
 			StringBuilder str = new StringBuilder();
 
 			str.append("\n\t").append("MultiPay Service -> startPayment function completed.").append("\n\t")
-					.append("Result: ").append(response.getResponseHeader().isSuccessful()).append("\n\t")
-					.append("Response Execution Time: ").append(response.getExternalExecutionTime()).append("\n\t")
-					.append("Total Execution Time: ").append(response.getTotalExecutionTime()).append("\n");
+					.append("Result: ").append(response.getResponseHeader().isSuccessful());
 
 			LOGGER.info(str.toString());
 		}

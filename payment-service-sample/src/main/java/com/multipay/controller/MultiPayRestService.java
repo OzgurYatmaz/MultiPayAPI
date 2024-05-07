@@ -77,10 +77,14 @@ public class MultiPayRestService {
 	@Operation(summary = "Start Payment", description = "Sends request to external payment services")
 	public ProcessPaymentResponse startPayment(@RequestBody ProcessPaymentRequest paymentRequest) {
 
+		long startTime = System.currentTimeMillis(), finishTime = 0;
+		
 		ProcessPaymentResponse response = new ProcessPaymentResponse();
 		if (!cardRepository.existsByCardNumber(paymentRequest.getCardNumber())) {
 			responseUtils.setStatusAsFailed(response, MessageEnums.CARD_NOT_EXIST.getMessageCode(), null,
 					paymentRequest.getProviderId());
+			finishTime = System.currentTimeMillis();
+			responseUtils.setResponseTime(response, startTime, finishTime);
 			return response;
 		}
 
@@ -90,10 +94,14 @@ public class MultiPayRestService {
 
 			responseUtils.setStatusAsFailed(response, MessageEnums.LIMIT_EXCEED.getMessageCode(), null,
 					paymentRequest.getProviderId());
+			finishTime = System.currentTimeMillis();
+			responseUtils.setResponseTime(response, startTime, finishTime);
 			return response;
 		}
 		response = distributorBean.startPayment(paymentRequest, card);
-
+		
+		finishTime = System.currentTimeMillis();
+		responseUtils.setResponseTime(response, startTime, finishTime);
 		return response;
 	}
 

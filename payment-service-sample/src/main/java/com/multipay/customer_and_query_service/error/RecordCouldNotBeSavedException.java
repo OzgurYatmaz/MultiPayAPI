@@ -1,18 +1,18 @@
-package com.multipay.customer.service.error;
+package com.multipay.customer_and_query_service.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-public class RecordsNotBeingFetchedException extends RuntimeException {
+public class RecordCouldNotBeSavedException extends RuntimeException {
 
 	private String errorDetail;
-
-	public RecordsNotBeingFetchedException(String message, String errorDetail) {
+	
+	public RecordCouldNotBeSavedException(String message, String errorDetails) {
 		super(message);
-		this.errorDetail = errorDetail;
+		this.errorDetail = errorDetails;
 	}
-
+	
 	public String getErrorDetail() {
 		return errorDetail;
 	}
@@ -20,7 +20,5 @@ public class RecordsNotBeingFetchedException extends RuntimeException {
 	public void setErrorDetail(String errorDetail) {
 		this.errorDetail = errorDetail;
 	}
-	
-	
 
 }

@@ -1,4 +1,8 @@
-package com.multipay.customer.service.error;
+/**
+ * This package contains classes for handling the exceptions thrown from customer controller.
+ * .
+ */
+package com.multipay.customer_and_query_service.error;
 
 import java.time.LocalDateTime;
 
@@ -12,12 +16,28 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+/**
+ *  This  class is for handling the exceptions thrown from customer and QueryPayment controllers. I guess method names are self explanatory :)
+ * 
+ * 
+ * @see com.multipay.controller.CustomerController  
+ * @see com.multipay.controller.QeryPaymentController  
+ * 
+ * @author Ozgur Yatmaz
+ * @version 1.0.0
+ * @since 2024-05-07
+ * 
+ */
 
 @ControllerAdvice
 public class ResponseErrorHandler extends ResponseEntityExceptionHandler {
 
-	
-	@Override//for menaging the validation errors auto controlled by spring validation anotations
+	/**
+	 * 
+	 * for managing the validation errors auto controlled by spring validation annotations
+	 * 
+	 */	
+	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatusCode status, WebRequest req) {
 		ErrorDetails errorDetails=new ErrorDetails(LocalDateTime.now(), 

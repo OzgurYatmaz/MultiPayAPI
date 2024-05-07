@@ -11,9 +11,9 @@ In this version it is possible to send payment requests to many external payment
 
  
 ### How to test api
-1. Use the Mockoon collection provided to mock sample external payment service providers
-
-2. Use the url below to test with swagger <br>
+1. Create scheama in mysql database with following command "CREATE SCHEMA `firisbe-payment"
+2. Use the Mockoon collection provided to mock sample external payment service providers
+3. Use the url below to test with swagger <br>
    http://localhost:8080/swagger-ui/index.html
  
 

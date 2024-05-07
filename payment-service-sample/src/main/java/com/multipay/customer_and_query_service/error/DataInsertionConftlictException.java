@@ -1,18 +1,19 @@
-package com.multipay.customer.service.error;
+package com.multipay.customer_and_query_service.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-public class RecordCouldNotBeSavedException extends RuntimeException {
+@ResponseStatus(code = HttpStatus.CONFLICT)
+public class DataInsertionConftlictException extends RuntimeException {
 
 	private String errorDetail;
+
 	
-	public RecordCouldNotBeSavedException(String message, String errorDetails) {
+	public DataInsertionConftlictException(String message, String errorDetail) {
 		super(message);
-		this.errorDetail = errorDetails;
+		this.errorDetail = errorDetail;
 	}
-	
+
 	public String getErrorDetail() {
 		return errorDetail;
 	}
@@ -20,5 +21,7 @@ public class RecordCouldNotBeSavedException extends RuntimeException {
 	public void setErrorDetail(String errorDetail) {
 		this.errorDetail = errorDetail;
 	}
+	
+	
 
 }

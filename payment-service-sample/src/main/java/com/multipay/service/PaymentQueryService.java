@@ -9,14 +9,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.multipay.customer.service.error.RecordsNotBeingFetchedException;
+import com.multipay.customer_and_query_service.error.RecordsNotBeingFetchedException;
 import com.multipay.model.Payment;
 import com.multipay.repository.PaymentRepository;
 
 @Service
-public class PaymentService {
+public class PaymentQueryService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PaymentService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PaymentQueryService.class);
 
 	@Autowired
 	private PaymentRepository paymentRepository;

@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 import com.multipay.beans.MessageEnums;
 import com.multipay.beans.ProcessPaymentRequest;
 import com.multipay.beans.ProcessPaymentResponse;
-import com.multipay.beans.Response;
 import com.multipay.integration.external.service1.PaymentService1Client;
 import com.multipay.model.Card;
 import com.multipay.model.TechnicalException;
+import com.multipay.utils.ResponseUtils;
 
 @Component
 public class PaymentService1 extends AbstractDispatcher {
@@ -32,7 +32,7 @@ public class PaymentService1 extends AbstractDispatcher {
 		ProcessPaymentResponse response = new ProcessPaymentResponse();
 		try {
 			response = paymentService1.processPayment(startPaymentRequest, card);
-			setStatusAsSuccess(response, 1);
+			ResponseUtils.setStatusAsSuccess(response, 1);
 		} catch (TechnicalException e) {
 			StringBuilder builder = new StringBuilder();
 
@@ -57,7 +57,7 @@ public class PaymentService1 extends AbstractDispatcher {
 			System.out.println(MessageEnums.getServiceMessageEnumByWSCode(e.getWsCode(), true, false));
 			System.out.println(MessageEnums.getServiceMessageEnumByWSCode(e.getWsCode(), true, false).getMessageCode());
 			System.out.println("-----------------------------------------------");
-			setStatusAsFailed(response,
+			ResponseUtils.setStatusAsFailed(response,
 					MessageEnums.getServiceMessageEnumByWSCode(e.getWsCode(), true, false).getMessageCode(), errArgs,
 					1);
 			if (StringUtils.isNotBlank(e.getWsExternalCode())) {
@@ -79,11 +79,11 @@ public class PaymentService1 extends AbstractDispatcher {
 
 			finishTime = System.currentTimeMillis();
 
-			setStatusAsFailed(response, MessageEnums.COMMON_SERVICE_ERROR.getMessageCode(),
+			ResponseUtils.setStatusAsFailed(response, MessageEnums.COMMON_SERVICE_ERROR.getMessageCode(),
 					new Object[] { e.getMessage() }, 1);
 		} finally {
 			finishTime = System.currentTimeMillis();
-			setResponseTime(response, startTime, finishTime);
+			ResponseUtils.setResponseTime(response, startTime, finishTime);
 		}
 
 		if (LOGGER.isInfoEnabled()) {

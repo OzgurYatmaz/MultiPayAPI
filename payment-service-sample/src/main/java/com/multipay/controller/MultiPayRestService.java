@@ -10,13 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.multipay.beans.MessageEnums;
 import com.multipay.beans.ProcessPaymentRequest;
 import com.multipay.beans.ProcessPaymentResponse;
-import com.multipay.beans.Response;
-import com.multipay.beans.ResponseHeader;
-import com.multipay.customer.service.error.ErrorDetails;
 import com.multipay.model.Card;
-import com.multipay.model.TechnicalException;
 import com.multipay.repository.CardRepository;
 import com.multipay.routing.RequestDistributor;
+import com.multipay.utils.ResponseUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,21 +22,57 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+/**
+ * This is main controller for processing payment from selected payment service
+ * provider.
+ * 
+ * @param Payment request object includes card number to associate payment to
+ *                card and payment amount and id of the external payment
+ *                provider.
+ * @return Payment response object includes info payment status and response
+ *         times of external payment service provider and total response time of
+ *         this web service.
+ * 
+ * 
+ **/
+
 @RequestMapping("/multipay/rest/payment")
 @Tag(name = "Transaction controller", description = "Make  and query payments") // For Swagger
 @RestController
 public class MultiPayRestService {
 
-
-	@Autowired
-	MessageSource messageSource;
-
+	/**
+	 * 
+	 * Card related operations is done with this
+	 * 
+	 */
 	@Autowired
 	private CardRepository cardRepository;
 
+	/**
+	 * 
+	 * Required for routing the payment request to selected external payment service
+	 * provider.
+	 * 
+	 */
 	@Autowired
 	RequestDistributor distributorBean;
 
+	/**
+	 * Make payment from registered card in data base by using the selected external
+	 * payment service provider. Initially card number and card balance is checked
+	 * (if card is exist in database and balance is sufficient). if validation is
+	 * successful payment request is directed to selected external payment service
+	 * provider to make the payment.
+	 * 
+	 * @param paymentRequest object includes card number to associate payment to
+	 *                       card and payment amount and providerId corresponding
+	 *                       external payment service provider.
+	 * @return Payment response object includes info if payment is successful or
+	 *         failed.
+	 * 
+	 * 
+	 */
 	@RequestMapping(value = "/startPayment", method = RequestMethod.POST)
 	@Operation(summary = "Start Payment", description = "Sends request to external payment services")
 //	@ApiResponses({
@@ -51,7 +84,7 @@ public class MultiPayRestService {
 
 		ProcessPaymentResponse response = new ProcessPaymentResponse();
 		if (!cardRepository.existsByCardNumber(paymentRequest.getCardNumber())) {
-			setStatusAsFailed(response, MessageEnums.INVALID_CARD_NUMBER.getWsCode(), null,
+			ResponseUtils.setStatusAsFailed(response, MessageEnums.INVALID_CARD_NUMBER.getWsCode(), null,
 					paymentRequest.getProviderId());
 			return response;
 		}
@@ -59,7 +92,8 @@ public class MultiPayRestService {
 		Card card = cardRepository.findByCardNumber(paymentRequest.getCardNumber()).get(0);
 
 		if (card.getBalance() < paymentRequest.getAmount()) {
-			setStatusAsFailed(response, MessageEnums.LIMIT_EXCEED.getWsCode(), null, paymentRequest.getProviderId());
+			ResponseUtils.setStatusAsFailed(response, MessageEnums.LIMIT_EXCEED.getWsCode(), null,
+					paymentRequest.getProviderId());
 			return response;
 		}
 		response = distributorBean.startPayment(paymentRequest, card);
@@ -67,20 +101,4 @@ public class MultiPayRestService {
 		return response;
 	}
 
-	public void setStatusAsFailed(Response response, String error, Object[] args, int providerId) {
-		createResponseHeader(response);
-
-		response.getResponseHeader().setCode(error);
-		response.getResponseHeader().setDescription(messageSource.getMessage(error, args, "Default message", null));
-		response.getResponseHeader().setSuccessful(false);
-		response.setProviderId(providerId);
-	}
-
-	private void createResponseHeader(Response response) {
-		if (response.getResponseHeader() == null) {
-			ResponseHeader responseHeader = new ResponseHeader();
-
-			response.setResponseHeader(responseHeader);
-		}
-	}
 }

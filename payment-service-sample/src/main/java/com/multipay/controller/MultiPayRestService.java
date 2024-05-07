@@ -1,7 +1,10 @@
+/**
+ * This package contains classes for all controllers of the project
+ * .
+ */
 package com.multipay.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,33 +19,28 @@ import com.multipay.routing.RequestDistributor;
 import com.multipay.utils.ResponseUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
+ * 
  * This is main controller for processing payment from selected payment service
  * provider.
  * 
- * @param Payment request object includes card number to associate payment to
- *                card and payment amount and id of the external payment
- *                provider.
- * @return Payment response object includes info payment status and response
- *         times of external payment service provider and total response time of
- *         this web service.
  * 
- * 
- **/
-
+ */
 @RequestMapping("/multipay/rest/payment")
 @Tag(name = "Transaction controller", description = "Make  and query payments") // For Swagger
 @RestController
 public class MultiPayRestService {
 
+	/**
+	 * 
+	 * For setting response details
+	 * 
+	 */
 	@Autowired
 	private ResponseUtils responseUtils;
+	
 	/**
 	 * 
 	 * Card related operations is done with this
@@ -77,16 +75,11 @@ public class MultiPayRestService {
 	 */
 	@RequestMapping(value = "/startPayment", method = RequestMethod.POST)
 	@Operation(summary = "Start Payment", description = "Sends request to external payment services")
-//	@ApiResponses({
-//		@ApiResponse(responseCode = "201", description = "When customer is successfully saved to data base"),
-//		@ApiResponse(responseCode = "400", description = "Bad Request", content = { @Content(schema = @Schema(hidden = true))} ),
-//		@ApiResponse(responseCode = "409", description = "When submitted data is in conflict with existing data in database or with itself", content = { @Content(schema = @Schema(implementation = ErrorDetails.class)) })
-//	  })
 	public ProcessPaymentResponse startPayment(@RequestBody ProcessPaymentRequest paymentRequest) {
 
 		ProcessPaymentResponse response = new ProcessPaymentResponse();
 		if (!cardRepository.existsByCardNumber(paymentRequest.getCardNumber())) {
-			responseUtils.setStatusAsFailed(response, MessageEnums.INVALID_CARD_NUMBER.getWsCode(), null,
+			responseUtils.setStatusAsFailed(response, MessageEnums.CARD_NOT_EXIST.getMessageCode(), null,
 					paymentRequest.getProviderId());
 			return response;
 		}
@@ -94,7 +87,8 @@ public class MultiPayRestService {
 		Card card = cardRepository.findByCardNumber(paymentRequest.getCardNumber()).get(0);
 
 		if (card.getBalance() < paymentRequest.getAmount()) {
-			responseUtils.setStatusAsFailed(response, MessageEnums.LIMIT_EXCEED.getWsCode(), null,
+
+			responseUtils.setStatusAsFailed(response, MessageEnums.LIMIT_EXCEED.getMessageCode(), null,
 					paymentRequest.getProviderId());
 			return response;
 		}

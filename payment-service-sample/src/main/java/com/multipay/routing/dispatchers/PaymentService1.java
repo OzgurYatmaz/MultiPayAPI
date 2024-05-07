@@ -19,6 +19,15 @@ public class PaymentService1 extends AbstractDispatcher {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PaymentService1.class);
 
+	/**
+	 * 
+	 * For setting response details
+	 * 
+	 */
+	@Autowired
+	private ResponseUtils responseUtils;
+	
+	
 	@Autowired
 	private PaymentService1Client paymentService1;
 
@@ -32,7 +41,7 @@ public class PaymentService1 extends AbstractDispatcher {
 		ProcessPaymentResponse response = new ProcessPaymentResponse();
 		try {
 			response = paymentService1.processPayment(startPaymentRequest, card);
-			ResponseUtils.setStatusAsSuccess(response, 1);
+			responseUtils.setStatusAsSuccess(response, 1);
 		} catch (TechnicalException e) {
 			StringBuilder builder = new StringBuilder();
 
@@ -53,12 +62,8 @@ public class PaymentService1 extends AbstractDispatcher {
 			} else {
 				errArgs = new Object[] { e.getWsMessage() };
 			}
-			System.out.println("-----------------------------------------------");
-			System.out.println(MessageEnums.getServiceMessageEnumByWSCode(e.getWsCode(), true, false));
-			System.out.println(MessageEnums.getServiceMessageEnumByWSCode(e.getWsCode(), true, false).getMessageCode());
-			System.out.println("-----------------------------------------------");
-			ResponseUtils.setStatusAsFailed(response,
-					MessageEnums.getServiceMessageEnumByWSCode(e.getWsCode(), true, false).getMessageCode(), errArgs,
+			responseUtils.setStatusAsFailed(response,
+					MessageEnums.getServiceMessageEnumByWSCode(e.getWsCode()).getMessageCode(), errArgs,
 					1);
 			if (StringUtils.isNotBlank(e.getWsExternalCode())) {
 				response.getResponseHeader().setCode(e.getWsExternalCode());
@@ -72,18 +77,14 @@ public class PaymentService1 extends AbstractDispatcher {
 					.append(e.getMessage());
 
 			LOGGER.error(builder.toString());
-//			LOGGER.error(e, e);
-			System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++");
-			System.out.println(MessageEnums.COMMON_SERVICE_ERROR.getMessageCode());
-			System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++");
 
 			finishTime = System.currentTimeMillis();
 
-			ResponseUtils.setStatusAsFailed(response, MessageEnums.COMMON_SERVICE_ERROR.getMessageCode(),
+			responseUtils.setStatusAsFailed(response, MessageEnums.COMMON_SERVICE_ERROR.getMessageCode(),
 					new Object[] { e.getMessage() }, 1);
 		} finally {
 			finishTime = System.currentTimeMillis();
-			ResponseUtils.setResponseTime(response, startTime, finishTime);
+			responseUtils.setResponseTime(response, startTime, finishTime);
 		}
 
 		if (LOGGER.isInfoEnabled()) {

@@ -1,4 +1,9 @@
+/**
+ * This package contains classes for routing functionality
+ * .
+ */
 package com.multipay.routing;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,55 +19,113 @@ import com.multipay.beans.MessageEnums;
 import com.multipay.beans.ProcessPaymentRequest;
 import com.multipay.beans.ProcessPaymentResponse;
 import com.multipay.model.Card;
-import com.multipay.model.TechnicalException;
-import com.multipay.repository.CardRepository;
 import com.multipay.routing.dispatchers.MultiPayDispatcher;
 import com.multipay.routing.dispatchers.PaymentService1;
 import com.multipay.routing.dispatchers.PaymentService2;
+import com.multipay.utils.ResponseUtils;
 
- 
+/**
+ * 
+ * This is for routing the request to selected payment service
+ * provider based on the providerId.
+ * 
+ * 
+ */
 @Service
 public class RequestDistributor {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(RequestDistributor.class);
-	
+
+	/**
+	 * 
+	 * For setting response details
+	 * 
+	 */
+	@Autowired
+	private ResponseUtils responseUtils;
+
+
+	/**
+	 * 
+	 * For fetching beans from spring container.
+	 * 
+	 */
 	@Autowired
 	private ApplicationContext context;
 	
+	/**
+	 * 
+	 * For registering the integrated payment services
+	 * 
+	 */
 	public List<MultiPayDispatcher> dispatchers;
-	
-	
-	
+
+
+	/**
+	 * 
+	 * For registering the integrated payment services during project start
+	 * 
+	 */
 	@PostConstruct
-	public void init(){
-		dispatchers=new ArrayList<MultiPayDispatcher>();
-		
-		MultiPayDispatcher dispatcher1=(PaymentService1) context.getBean(PaymentService1.class);
+	public void init() {
+		dispatchers = new ArrayList<MultiPayDispatcher>();
+
+		MultiPayDispatcher dispatcher1 = (PaymentService1) context.getBean(PaymentService1.class);
 		dispatcher1.setDispatcherId(1);
 		dispatchers.add(dispatcher1);
-		
-		MultiPayDispatcher dispatcher2=(MultiPayDispatcher) context.getBean(PaymentService2.class);
+
+		MultiPayDispatcher dispatcher2 = (MultiPayDispatcher) context.getBean(PaymentService2.class);
 		dispatcher2.setDispatcherId(2);
 		dispatchers.add(dispatcher2);
-		
+
 		LOGGER.info("2 dispatchers successfully initalized.");
-		
+
 	}
-	
+
+
+	/**
+	 * 
+	 * Fetches payment service based on the providerId supplied in payment request
+	 * 
+	 * @param providerId
+	 * @return Child class objects of the MultiPay dispatcher which functions as clients of external payment service providers
+	 * 
+	 * 
+	 */
 	private MultiPayDispatcher getDispatcher(int dispatcherId) {
 		for (MultiPayDispatcher d : dispatchers) {
-				if (d.getDispatcherId() == dispatcherId) {
-						return d;
-				}
+			if (d.getDispatcherId() == dispatcherId) {
+				return d;
+			}
 		}
 		return null;
 	}
 
-	
-	public ProcessPaymentResponse startPayment(ProcessPaymentRequest paymentRequest, Card card)  {
-		
-		return getDispatcher(paymentRequest.getProviderId()).startPayment(paymentRequest, card);
+
+
+	/**
+	 * 
+	 * Fetches payment service based on the providerId supplied in payment request
+	 * 
+	 * @param Payment request object
+	 * @param Card object
+	 * @return Payment response object includes info if payment is successful or
+	 *         failed.
+	 * 
+	 */
+	public ProcessPaymentResponse startPayment(ProcessPaymentRequest paymentRequest, Card card) {
+
+		MultiPayDispatcher selectedDispatcher = getDispatcher(paymentRequest.getProviderId());
+
+		if (selectedDispatcher == null) {
+			ProcessPaymentResponse response = new ProcessPaymentResponse();
+			responseUtils.setStatusAsFailed(response, MessageEnums.INVALID_PROVIDER_ID.getMessageCode(), null,
+					paymentRequest.getProviderId());
+			return response;
+		}
+
+		return selectedDispatcher.startPayment(paymentRequest, card);
+
 	}
 
-	 
 }

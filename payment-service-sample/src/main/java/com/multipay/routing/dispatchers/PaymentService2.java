@@ -19,6 +19,14 @@ public class PaymentService2 extends AbstractDispatcher {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PaymentService2.class);
 
+	/**
+	 * 
+	 * For setting response details
+	 * 
+	 */
+	@Autowired
+	private ResponseUtils responseUtils;
+	
 	@Autowired
 	private PaymentService2Client paymentService2;
 
@@ -32,7 +40,7 @@ public class PaymentService2 extends AbstractDispatcher {
 		ProcessPaymentResponse response = new ProcessPaymentResponse();
 		try {
 			response = paymentService2.processPayment(startPaymentRequest, card);
-			ResponseUtils.setStatusAsSuccess(response, 1);
+			responseUtils.setStatusAsSuccess(response, 1);
 		} catch (TechnicalException e) {
 			StringBuilder builder = new StringBuilder();
 
@@ -53,13 +61,9 @@ public class PaymentService2 extends AbstractDispatcher {
 			} else {
 				errArgs = new Object[] { e.getWsMessage() };
 			}
-			System.out.println("-----------------------------------------------");
-			System.out.println(MessageEnums.getServiceMessageEnumByWSCode(e.getWsCode(), true, false));
-			System.out.println(MessageEnums.getServiceMessageEnumByWSCode(e.getWsCode(), true, false).getMessageCode());
-			System.out.println("-----------------------------------------------");
-			ResponseUtils.setStatusAsFailed(response,
-					MessageEnums.getServiceMessageEnumByWSCode(e.getWsCode(), true, false).getMessageCode(), errArgs,
-					1);
+			responseUtils.setStatusAsFailed(response,
+					MessageEnums.getServiceMessageEnumByWSCode(e.getWsCode()).getMessageCode(), errArgs,
+					2);
 			if (StringUtils.isNotBlank(e.getWsExternalCode())) {
 				response.getResponseHeader().setCode(e.getWsExternalCode());
 			}
@@ -79,11 +83,11 @@ public class PaymentService2 extends AbstractDispatcher {
 
 			finishTime = System.currentTimeMillis();
 
-			ResponseUtils.setStatusAsFailed(response, MessageEnums.COMMON_SERVICE_ERROR.getMessageCode(),
+			responseUtils.setStatusAsFailed(response, MessageEnums.COMMON_SERVICE_ERROR.getMessageCode(),
 					new Object[] { e.getMessage() }, 1);
 		} finally {
 			finishTime = System.currentTimeMillis();
-			ResponseUtils.setResponseTime(response, startTime, finishTime);
+			responseUtils.setResponseTime(response, startTime, finishTime);
 		}
 
 		if (LOGGER.isInfoEnabled()) {

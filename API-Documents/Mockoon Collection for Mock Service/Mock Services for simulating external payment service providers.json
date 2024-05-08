@@ -15,7 +15,32 @@
       "responses": [
         {
           "uuid": "2dc44086-2a55-4a73-8043-cc6f733953a8",
-          "body": "null",
+          "body": "{\n  \"status\": \"success\",\n  \"code\": 0\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "b46cf80b-fabc-449a-9063-5370ff2d7523",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "mock-service2/make-payment2",
+      "responses": [
+        {
+          "uuid": "727f11a4-d971-4606-b752-f91e59251af4",
+          "body": "{\n  \"statusCode\": \"00\",\n  \"statusMessage\": \"success\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",

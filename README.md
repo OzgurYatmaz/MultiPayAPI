@@ -1,7 +1,9 @@
 # Spring Boot Project simulating a payment api integrated with multiple mock payment service providers
 ## (This an  ongoing Project but deployable :) )
 This is the improved version of the  <a href=https://github.com/OzgurYatmaz/FirisbeInterview>following</a> project. <br>
-In this version it is possible to send payment requests to many external payment service providers. 
+In this version it is possible to send payment requests to many external payment service providers. <br><br>
+ -Currently there are only 2 external service samples integrated (providerId=1 and providerId=2) and there is no limit of adding any number of external payment services.<br>
+ -After this project is completed I will convert it to multi modular structure.
 
 ### How to run the project
 
@@ -11,8 +13,8 @@ In this version it is possible to send payment requests to many external payment
 
  
 ### How to test api
-1. Create scheama in mysql database with following command "CREATE SCHEMA `firisbe-payment"
-2. Use the Mockoon collection provided to mock sample external payment service providers
+1. Create scheama in mysql database with following command "CREATE SCHEMA `firisbe-payment' "
+2. Use the Mockoon collection provided <a href=API-Documents>here</a>
 3. Use the url below to test with swagger <br>
    http://localhost:8080/swagger-ui/index.html
  

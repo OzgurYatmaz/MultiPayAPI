@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import com.multipay.beans.MessageEnums;
 import com.multipay.beans.Response;
 import com.multipay.beans.ResponseHeader;
-import com.multipay.model.StatusMessageConstants;
 
 @Component
 public class ResponseUtils {
@@ -19,9 +19,8 @@ public class ResponseUtils {
 		createResponseHeader(response);
 
 		response.getResponseHeader().setSuccessful(true);
-		response.getResponseHeader().setDescription(
-				messageSource.getMessage(StatusMessageConstants.SUCCESSFUL, null, "Default message", null));
-		response.getResponseHeader().setCode(StatusMessageConstants.SUCCESSFUL);
+		response.getResponseHeader().setDescription(messageSource.getMessage(MessageEnums.SUCCESSFUL.getMessageCode(), null, null, null));
+		response.getResponseHeader().setCode(messageSource.getMessage(MessageEnums.SUCCESSFUL.getWsCode(), null, null, null));
 		response.setProviderId(providerId);
 	}
 	

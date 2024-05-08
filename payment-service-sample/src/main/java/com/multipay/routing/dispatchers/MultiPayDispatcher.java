@@ -3,7 +3,6 @@ package com.multipay.routing.dispatchers;
 import com.multipay.beans.ProcessPaymentRequest;
 import com.multipay.beans.ProcessPaymentResponse;
 import com.multipay.model.Card;
-import com.multipay.model.TechnicalException;
 
 public interface MultiPayDispatcher {
 	

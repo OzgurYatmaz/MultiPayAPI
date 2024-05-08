@@ -20,6 +20,7 @@ import com.multipay.beans.ProcessPaymentRequest;
 import com.multipay.beans.ProcessPaymentResponse;
 import com.multipay.beans.ResponseHeader;
 import com.multipay.configuration.PaymentServiceConfig;
+import com.multipay.integration.external.service1.dto.ExternalService1PaymentResponseDTO;
 import com.multipay.model.Card;
 import com.multipay.model.Payment;
 import com.multipay.model.TechnicalException;
@@ -49,7 +50,7 @@ public class PaymentService1Client {
 		// create an object for external service's request body. This is just dummy
 		Payment payment = prepareExternalRequest(paymentRequest, card);
 
-		ResponseEntity<String> responseEntity = null;
+		ResponseEntity<ExternalService1PaymentResponseDTO> responseEntity = null;
 		ProcessPaymentResponse response;
 		try {
 
@@ -74,7 +75,7 @@ public class PaymentService1Client {
 		return response;
 	}
 
-	private ResponseEntity<String> sendPaymentRequestToExternalService(ProcessPaymentRequest externalRequest)
+	private ResponseEntity<ExternalService1PaymentResponseDTO> sendPaymentRequestToExternalService(ProcessPaymentRequest externalRequest)
 			throws  TechnicalException, JsonProcessingException {
 
 		String jsonRequest = objectMapper.writeValueAsString(externalRequest);
@@ -94,8 +95,8 @@ public class PaymentService1Client {
 
 		try {
 
-			ResponseEntity<String> externalResponse = restTemplate
-					.postForEntity(configParameters.getPaymentserviceurl(), externalRequest, String.class);
+			ResponseEntity<ExternalService1PaymentResponseDTO> externalResponse = restTemplate
+					.postForEntity(configParameters.getPaymentserviceurl(), externalRequest, ExternalService1PaymentResponseDTO.class);
 			if (LOGGER.isDebugEnabled()) {
 				StringBuffer bufferResponse = new StringBuffer();
 
@@ -123,25 +124,25 @@ public class PaymentService1Client {
 		return payment;
 	}
 
-	private ProcessPaymentResponse processExternalResponse(Payment payment, ResponseEntity<String> responseEntity,
-			Integer cardId, long responseTime) {
+	private ProcessPaymentResponse processExternalResponse(Payment payment, ResponseEntity<ExternalService1PaymentResponseDTO> responseEntity,
+			Integer cardId, long responseTime) throws TechnicalException {
 
 		ProcessPaymentResponse response = new ProcessPaymentResponse();
 		ResponseHeader header = new ResponseHeader();
-		if (ObjectUtils.isNotEmpty(responseEntity)) {
-			// additional confirmation steps might be needed depending on the requirements
+		if (ObjectUtils.isNotEmpty(responseEntity) && ObjectUtils.isNotEmpty(responseEntity.getBody())) {
+			 
+			
 			if (responseEntity.getStatusCode() == HttpStatus.OK) {
 				// only successful payments are saved to DB for now.
 				paymentRepository.save(payment);
 				cardRepository.updateBalanceAfterPayment(cardId, payment.getAmount());
-
-				header.setCode("00");
 			} else {
 				LOGGER.error("Payment response received indicates the failure of payment: ");
-				header.setCode("99");
 			}
+			header.setDescription(responseEntity.getBody().getStatus());
+			header.setCode(responseEntity.getBody().getCode()+"");
 		} else {
-			header.setCode("98");
+			throw new TechnicalException(MessageEnums.OPERATION_RESPONSE_NULL.getWsCode(), "External service error response is null");
 		}
 		response.setResponseHeader(header);
 		response.setExternalExecutionTime(responseTime);

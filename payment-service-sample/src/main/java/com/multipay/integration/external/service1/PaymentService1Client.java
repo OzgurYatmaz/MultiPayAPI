@@ -19,7 +19,7 @@ import com.multipay.beans.MessageEnums;
 import com.multipay.beans.ProcessPaymentRequest;
 import com.multipay.beans.ProcessPaymentResponse;
 import com.multipay.beans.ResponseHeader;
-import com.multipay.configuration.PaymentServiceConfig;
+import com.multipay.configuration.PaymentServiceParameters;
 import com.multipay.integration.external.service1.dto.ExternalService1PaymentResponseDTO;
 import com.multipay.model.Card;
 import com.multipay.model.Payment;
@@ -33,7 +33,7 @@ public class PaymentService1Client {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PaymentService1Client.class);
 
 	@Autowired
-	private PaymentServiceConfig configParameters;
+	private PaymentServiceParameters configParameters;
 	@Autowired
 	private CardRepository cardRepository;
 

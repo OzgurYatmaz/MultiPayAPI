@@ -1,5 +1,5 @@
-# Spring Boot Project simulating a payment api integrated with multiple mock payment service providers
-## (This an  ongoing Project but deployable :) )
+# Spring boot project simulating a payment api integrated with multiple mock payment service providers
+## (This project will be converted to multi-modular structure soon)
 This is the improved version of the  <a href=https://github.com/OzgurYatmaz/FirisbeInterview>following</a> project. <br>
 In this version it is possible to send payment requests to many external payment service providers. <br><br>
  -Currently there are only 2 external service samples integrated (providerId=1 and providerId=2) and there is no limit in adding external payment services providers.<br>
@@ -28,5 +28,5 @@ Framework: Spring Boot 3.2.5 <br>
 Database: MySql <br>
 DB Management: Spring Data JPA <br>
 Unit Tests: JUnit and Maven Surefire for functionality coverage test reports <br>
-Documentation: Swagger 3 (OPenAPI)  <br>
+Documentation: Swagger 3 (OpenAPI)  <br>
 Build Tool: Maven 

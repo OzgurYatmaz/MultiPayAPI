@@ -27,8 +27,6 @@ public class CustomerDTO {
 	@Schema(description = "Customer's email address must be unique", example = "ozguryatmaz@yandex.com")
 	private String email;
 
-	 
-
 	public String getName() {
 		return name;
 	}
@@ -52,5 +50,6 @@ public class CustomerDTO {
 	public void setCustomerNumber(String customerNumber) {
 		this.customerNumber = customerNumber;
 	}
+
 
 }

@@ -32,16 +32,9 @@ public class PaymentDTO {
 	@Schema(description = "Time when payment is processed", example = "2024-04-26 01:36:09.759075")
 	private LocalDateTime paymentDate;
 
-	public PaymentDTO(double amount, String cardNumber, String customerNumber, LocalDateTime paymentDate) {
-		this.amount = amount;
-		this.cardNumber = cardNumber;
-		this.customerNumber = customerNumber;
-		this.paymentDate = paymentDate;
-	}
-
-	public PaymentDTO() {
-	}
-
+	@Schema(description = "The external payment service used for the payment", example = "SERVİCE-1")
+	private String paymentServiceProvider;
+	
 	public String getCardNumber() {
 		return cardNumber;
 	}
@@ -74,4 +67,13 @@ public class PaymentDTO {
 		this.customerNumber = customerNumber;
 	}
 
+	public String getPaymentServiceProvider() {
+		return paymentServiceProvider;
+	}
+
+	public void setPaymentServiceProvider(String paymentServiceProvider) {
+		this.paymentServiceProvider = paymentServiceProvider;
+	}
+
+	
 }

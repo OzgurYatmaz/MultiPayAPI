@@ -6,6 +6,7 @@ package com.multipay.entity;
 
 import java.time.LocalDateTime;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,7 +40,7 @@ public class Payment {
 	private String cardNumber;
 	@Column(name = "customer_number")
 	private String customerNumber;
-
+	@Schema(description = "The external payment service used for the payment", example = "SERVİCE-1")
 	private String paymentProvider;
 
 	private LocalDateTime paymentDate;

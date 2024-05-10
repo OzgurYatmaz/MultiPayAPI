@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.multipay.customer_and_query_service.error.ErrorDetails;
 import com.multipay.dto.PaymentDTO;
-import com.multipay.entity.Payment;
 import com.multipay.service.PaymentQueryService;
 
 import io.swagger.v3.oas.annotations.Operation;

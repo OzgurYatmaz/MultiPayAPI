@@ -126,6 +126,7 @@ public class PaymentQueryService {
 				tempPayment.setCustomerNumber(p.getCustomerNumber());
 				tempPayment.setCardNumber(p.getCardNumber());
 				tempPayment.setPaymentDate(p.getPaymentDate());
+				tempPayment.setPaymentServiceProvider(p.getPaymentProvider());
 				paymentsForResponse.add(tempPayment);
 			}
 

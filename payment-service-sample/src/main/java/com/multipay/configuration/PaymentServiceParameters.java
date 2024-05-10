@@ -24,7 +24,7 @@ public class PaymentServiceParameters {
 	/**
 	 * Uri of the first external payment service provider
 	 */
-	private String paymentserviceurl;
+	private String paymentservice1url;
 
 	/**
 	 * Uri of the second external payment service provider
@@ -32,16 +32,17 @@ public class PaymentServiceParameters {
 	private String paymentservice2url;
 
 	/**
-	 * For connection timeout time in milliseconds when sending request to external payment service providers
+	 * For connection timeout time in milliseconds when sending request to external
+	 * payment service providers
 	 */
 	private int timeout;
 
-	public String getPaymentserviceurl() {
-		return paymentserviceurl;
+	public String getPaymentservice1url() {
+		return paymentservice1url;
 	}
 
-	public void setPaymentserviceurl(String paymentserviceurl) {
-		this.paymentserviceurl = paymentserviceurl;
+	public void setPaymentservice1url(String paymentservice1url) {
+		this.paymentservice1url = paymentservice1url;
 	}
 
 	public String getPaymentservice2url() {

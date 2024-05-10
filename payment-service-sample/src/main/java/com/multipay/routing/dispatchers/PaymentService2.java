@@ -1,3 +1,6 @@
+/**
+ * This package is for all main services of the integrated payment service providers
+ */
 package com.multipay.routing.dispatchers;
 
 import org.apache.commons.lang3.StringUtils;
@@ -8,12 +11,16 @@ import org.springframework.stereotype.Component;
 
 import com.multipay.dto.ProcessPaymentRequestDTO;
 import com.multipay.dto.ProcessPaymentResponseDTO;
-import com.multipay.entity.Card;
 import com.multipay.entity.TechnicalException;
 import com.multipay.integration.external.service2.PaymentService2Client;
 import com.multipay.utils.MessageEnums;
 import com.multipay.utils.ResponseUtils;
 
+/**
+ * 
+ * This is for service layer for integration to external payment service provider 2
+ * 
+ */
 @Component
 public class PaymentService2 extends AbstractDispatcher {
 
@@ -27,23 +34,37 @@ public class PaymentService2 extends AbstractDispatcher {
 	@Autowired
 	private ResponseUtils responseUtils;
 
+	/**
+	 * 
+	 * For setting communicating with external payment service provider 2
+	 * 
+	 */
 	@Autowired
-	private PaymentService2Client paymentService2;
+	private PaymentService2Client externalServiceClient;
 
+	/**
+	 * 
+	 * Makes payment from external payment service provider 1 by using client class
+	 * 
+	 * @param paymentRequest object 
+	 * @return Payment response object includes info if payment is successful or
+	 *         failed.
+	 * 
+	 */
 	@Override
-	public ProcessPaymentResponseDTO startPayment(ProcessPaymentRequestDTO startPaymentRequest, Card card) {
+	public ProcessPaymentResponseDTO startPayment(ProcessPaymentRequestDTO startPaymentRequest) {
 		if (LOGGER.isInfoEnabled()) {
 			LOGGER.info("startPayment function started ");
 		}
 
 		ProcessPaymentResponseDTO response = new ProcessPaymentResponseDTO();
 		try {
-			response = paymentService2.processPayment(startPaymentRequest, card);
-			responseUtils.setStatusAsSuccess(response, 1);
+			response = externalServiceClient.processPayment(startPaymentRequest);
+			
 		} catch (TechnicalException e) {
 			StringBuilder builder = new StringBuilder();
 
-			builder.append("\n\t").append("MultiPay Service -> startPayment TecnicalException error").append("\n\t")
+			builder.append("\n\t").append("MultiPay Service 1 -> startPayment TecnicalException error").append("\n\t")
 					.append("Error Details:").append("\n\t").append("Code:").append(e.getWsCode()).append("\n\t")
 					.append("WS Message:").append(e.getWsMessage()).append("\n\t").append("Service Message:")
 					.append(e.getMessage());
@@ -59,14 +80,14 @@ public class PaymentService2 extends AbstractDispatcher {
 				errArgs = new Object[] { e.getWsMessage() };
 			}
 			responseUtils.setStatusAsFailed(response,
-					MessageEnums.getServiceMessageEnumByWSCode(e.getWsCode()).getMessageCode(), errArgs, 2);
+					MessageEnums.getServiceMessageEnumByWSCode(e.getWsCode()).getMessageCode(), errArgs, 1);
 			if (StringUtils.isNotBlank(e.getWsExternalCode())) {
 				response.getResponseHeader().setCode(e.getWsExternalCode());
 			}
 		} catch (Exception e) {
 			StringBuilder builder = new StringBuilder();
 
-			builder.append("\n\t").append("MultiPay Service -> startPayment Exception error").append("\n\t")
+			builder.append("\n\t").append("MultiPay Service 1 -> startPayment Exception error").append("\n\t")
 					.append("Error Details:").append("\n\t").append("Code:")
 					.append(MessageEnums.COMMON_SERVICE_ERROR.getWsCode()).append("\n\t").append("Service Message:")
 					.append(e.getMessage());
@@ -80,12 +101,13 @@ public class PaymentService2 extends AbstractDispatcher {
 		if (LOGGER.isInfoEnabled()) {
 			StringBuilder str = new StringBuilder();
 
-			str.append("\n\t").append("MultiPay Service -> startPayment function completed.").append("\n\t")
+			str.append("\n\t").append("MultiPay Service 1 -> startPayment function completed.").append("\n\t")
 					.append("Result: ").append(response.getResponseHeader().isSuccessful());
 
 			LOGGER.info(str.toString());
 		}
 		return response;
 	}
+
 
 }

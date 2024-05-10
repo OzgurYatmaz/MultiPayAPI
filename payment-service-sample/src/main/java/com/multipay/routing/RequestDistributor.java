@@ -70,7 +70,7 @@ public class RequestDistributor {
 	public void init() {
 		dispatchers = new ArrayList<MultiPayDispatcher>();
 
-		MultiPayDispatcher dispatcher1 = (PaymentService1) context.getBean(PaymentService1.class);
+		MultiPayDispatcher dispatcher1 = (MultiPayDispatcher) context.getBean(PaymentService1.class);
 		dispatcher1.setDispatcherId(1);
 		dispatchers.add(dispatcher1);
 
@@ -108,12 +108,12 @@ public class RequestDistributor {
 	 * Fetches payment service based on the providerId supplied in payment request
 	 * 
 	 * @param Payment request object
-	 * @param Card object
+	 * 
 	 * @return Payment response object includes info if payment is successful or
 	 *         failed.
 	 * 
 	 */
-	public ProcessPaymentResponseDTO startPayment(ProcessPaymentRequestDTO paymentRequest, Card card) {
+	public ProcessPaymentResponseDTO startPayment(ProcessPaymentRequestDTO paymentRequest) {
 
 		MultiPayDispatcher selectedDispatcher = getDispatcher(paymentRequest.getProviderId());
 
@@ -124,7 +124,7 @@ public class RequestDistributor {
 			return response;
 		}
 
-		return selectedDispatcher.startPayment(paymentRequest, card);
+		return selectedDispatcher.startPayment(paymentRequest);
 
 	}
 

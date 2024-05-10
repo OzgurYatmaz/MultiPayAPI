@@ -27,13 +27,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * 
- * This is main controller for processing payment from selected payment service
- * provider.
+ * This is main controller for processing payment request. Here request is
+ * validated and forwarded to selected payment service
  * 
  * 
  */
 @RequestMapping("/multipay/payments")
-@Tag(name = "Transaction controller", description = "Make  payments") // For Swagger
+@Tag(name = "Transaction controller", description = "Make  payments from selected external payment service provider") // For
+																														// Swagger
 @RestController
 public class MultiPayRestService {
 
@@ -60,7 +61,7 @@ public class MultiPayRestService {
 	 */
 	@Autowired
 	private PaymentRepository paymentRepository;
-	
+
 	/**
 	 * 
 	 * Required for routing the payment request to selected external payment service
@@ -75,7 +76,9 @@ public class MultiPayRestService {
 	 * payment service provider. Initially card number and card balance is checked
 	 * (if card is exist in database and balance is sufficient). if validation is
 	 * successful payment request is directed to selected external payment service
-	 * provider to make the payment.
+	 * provider to make the payment. And if the response status of external payment
+	 * service provider is successful, payment record is saved to database. And
+	 * total response time of the operation is also calculated here.
 	 * 
 	 * @param paymentRequest object includes card number to associate payment to
 	 *                       card and payment amount and providerId corresponding
@@ -110,14 +113,14 @@ public class MultiPayRestService {
 			responseUtils.setResponseTime(response, startTime, finishTime);
 			return response;
 		}
-		response = distributorBean.startPayment(paymentRequest, card);
+		response = distributorBean.startPayment(paymentRequest);
 
-		if(response.getResponseHeader().isSuccessful()) {
+		if (response.getResponseHeader().isSuccessful()) {
 			cardRepository.updateBalanceAfterPayment(card.getId(), paymentRequest.getAmount());
-			
+
 			Payment payment = preparePaymentInfoForDatabase(paymentRequest, card);
 			paymentRepository.save(payment);
-			
+
 			responseUtils.setStatusAsSuccess(response, 1);
 		}
 		finishTime = System.currentTimeMillis();
@@ -125,7 +128,16 @@ public class MultiPayRestService {
 		return response;
 	}
 
-	
+	/**
+	 * 
+	 * Prepares payment record object to create payment record in database.
+	 * 
+	 * @param payment request object to carry payment data which consist of payment
+	 *                amount and card number.
+	 * @param Card    object for card info from which payment will be done.
+	 * 
+	 * @return Payment record object to be saved to database
+	 */
 	private Payment preparePaymentInfoForDatabase(ProcessPaymentRequestDTO paymentRequest, Card card) {
 		Payment payment = new Payment();
 		payment.setCardNumber(card.getCardNumber());
@@ -133,7 +145,7 @@ public class MultiPayRestService {
 		LocalDateTime paymentTime = LocalDateTime.now();
 		payment.setPaymentDate(paymentTime);
 		payment.setCustomerNumber(card.getCustomerNumber());
-		payment.setPaymentProvider("SERVICE-1");
+		payment.setPaymentProvider("SERVICE-" + paymentRequest.getProviderId());
 		return payment;
 	}
 }

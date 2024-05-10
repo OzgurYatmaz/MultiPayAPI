@@ -1,3 +1,6 @@
+/**
+ * This package is for DTOs of first external payment service provider
+ */
 package com.multipay.integration.external.service1.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

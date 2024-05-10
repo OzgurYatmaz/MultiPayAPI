@@ -73,7 +73,7 @@ public class MultiPayRestService {
 	 * 
 	 * 
 	 */
-	@RequestMapping(value = "/startPayment", method = RequestMethod.POST)
+	@RequestMapping(value = "/make-payment", method = RequestMethod.POST)
 	@Operation(summary = "Makes Payment from the balance of the card", description = "Makes payment from balance of the card by using the selected external payment service provider and records payment info to database")
 	public ProcessPaymentResponseDTO startPayment(@RequestBody ProcessPaymentRequestDTO paymentRequest) {
 

@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @since 2024-05-10
  * 
  */
-@Schema(description = "Start Payment Response Model Information")
+@Schema(description = "Make Payment Response Model Information")
 public class ProcessPaymentResponseDTO extends Response {
 
 }

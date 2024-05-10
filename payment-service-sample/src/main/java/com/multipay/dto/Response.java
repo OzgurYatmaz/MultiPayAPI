@@ -1,10 +1,16 @@
 package com.multipay.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class Response {
 
+	
 	protected ResponseHeader responseHeader;
+	@Schema(description = "Id of external payment service provider", example = "1")
 	protected int providerId;
+	@Schema(description = "Response time of this API in milliseconds", example = "115")
 	protected long totalExecutionTime;
+	@Schema(description = "Response time of exteranal payment service provider in milliseconds", example = "85")
 	protected long externalExecutionTime;
 
 	

@@ -5,7 +5,7 @@ package com.multipay.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.multipay.model.Customer;
+import com.multipay.entity.Customer;
 
 /**
  * 

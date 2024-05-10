@@ -1,12 +1,28 @@
-package com.multipay.beans;
+/**
+ * This package is for data transfer objects (DTO) to transfer data over web while communicating with this API
+ */
+package com.multipay.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
+/**
+ * 
+ * Objects of this class are used to transfer data over web.
+ * Request body of make payment operation
+ * 
+ * @see com.multipay.controller.MultiPayRestService.startPayment(ProcessPaymentRequestDTO)
+ * 
+ * @author Ozgur Yatmaz
+ * @version 1.0.0
+ * @since 2024-05-10
+ * 
+ */
+
 @Schema(description = "Payment Request Model Information")
-public class ProcessPaymentRequest extends Request {
+public class ProcessPaymentRequestDTO extends Request {
 
 	@NotNull(message = "Card number cannot be null")
 	@NotBlank(message = "Card Number may not be empty or blank")

@@ -1,12 +1,12 @@
 package com.multipay.routing.dispatchers;
 
-import com.multipay.beans.ProcessPaymentRequest;
-import com.multipay.beans.ProcessPaymentResponse;
-import com.multipay.model.Card;
+import com.multipay.dto.ProcessPaymentRequestDTO;
+import com.multipay.dto.ProcessPaymentResponseDTO;
+import com.multipay.entity.Card;
 
 public interface MultiPayDispatcher {
 	
-	public ProcessPaymentResponse startPayment(ProcessPaymentRequest multipayRequest, Card card);
+	public ProcessPaymentResponseDTO startPayment(ProcessPaymentRequestDTO multipayRequest, Card card);
 	
 
 	public int getDispatcherId();

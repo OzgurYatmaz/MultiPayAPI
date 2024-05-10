@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.multipay.customer_and_query_service.error.ErrorDetails;
-import com.multipay.model.Payment;
+import com.multipay.dto.PaymentDTO;
+import com.multipay.entity.Payment;
 import com.multipay.service.PaymentQueryService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,9 +40,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  * @since 2024-05-06
  * 
  */
-@Tag(name = "Query Payment controller", description = "Make  and query payments") // For Swagger
+@Tag(name = "Query Payment controller", description = "Query payments from database") // For Swagger
 @RestController
-@RequestMapping("/payments")
+@RequestMapping("multipay/payments")
 public class QueryPaymentController {
 
 	/**
@@ -66,14 +67,14 @@ public class QueryPaymentController {
 	 */
 	@Operation(summary = "Fetch by customer or card number", description = "Fethc payments made with parameters card number or customer number")
 	@ApiResponses({ @ApiResponse(responseCode = "200", content = {
-			@Content(array = @ArraySchema(schema = @Schema(implementation = Payment.class)), mediaType = "application/json") }),
+			@Content(array = @ArraySchema(schema = @Schema(implementation = PaymentDTO.class)), mediaType = "application/json") }),
 			@ApiResponse(responseCode = "500", description = "When error being occured during querying database", content = {
 					@Content(schema = @Schema(implementation = ErrorDetails.class)) }) })
 	@GetMapping("/fetch-payments")
-	public ResponseEntity<List<Payment>> getPaymentsBySearchCriteria(@RequestParam(required = false) String cardNumber,
+	public ResponseEntity<List<PaymentDTO>> getPaymentsBySearchCriteria(@RequestParam(required = false) String cardNumber,
 			@RequestParam(required = false) String customerNumber) throws Exception {
 		try {
-			List<Payment> payments = paymentService.findPaymentsBySearchCriteria(cardNumber, customerNumber);
+			List<PaymentDTO> payments = paymentService.findPaymentsBySearchCriteria(cardNumber, customerNumber);
 			return ResponseEntity.ok(payments);
 
 		} catch (Exception e) {
@@ -98,16 +99,16 @@ public class QueryPaymentController {
 	 */
 	@Operation(summary = "Fetch by date interval", description = "Fethc payments made with parameters start date and end date")
 	@ApiResponses({ @ApiResponse(responseCode = "200", content = {
-			@Content(array = @ArraySchema(schema = @Schema(implementation = Payment.class)), mediaType = "application/json") }),
+			@Content(array = @ArraySchema(schema = @Schema(implementation = PaymentDTO.class)), mediaType = "application/json") }),
 			@ApiResponse(responseCode = "500", description = "When error being occured during querying database", content = {
 					@Content(schema = @Schema(implementation = ErrorDetails.class)) }) })
 	@GetMapping("/fetch-payments-bydate")
-	public ResponseEntity<List<Payment>> getAllPaymentsbyDateInterval(
+	public ResponseEntity<List<PaymentDTO>> getAllPaymentsbyDateInterval(
 			@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
 			@RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate)
 			throws Exception {
 		try {
-			List<Payment> payments = paymentService.getAllPaymentsbyDateInterval(startDate, endDate);
+			List<PaymentDTO> payments = paymentService.getAllPaymentsbyDateInterval(startDate, endDate);
 			return ResponseEntity.ok(payments);
 
 		} catch (Exception e) {

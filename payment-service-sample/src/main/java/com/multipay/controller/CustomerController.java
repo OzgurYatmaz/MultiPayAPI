@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.multipay.customer_and_query_service.error.ErrorDetails;
-import com.multipay.model.Customer;
+import com.multipay.dto.AddCustomerRequestDTO;
+import com.multipay.dto.CustomerDTO;
+import com.multipay.entity.Customer;
 import com.multipay.service.CustomerService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,7 +48,7 @@ import jakarta.validation.Valid;
 
 @Tag(name = "Customer controller", description = "Add  and fetch customers")
 @RestController
-@RequestMapping("/customer")
+@RequestMapping("/multipay/customer")
 public class CustomerController {
 
 	/**
@@ -67,11 +69,11 @@ public class CustomerController {
 	 * @return Http status code 200 with string message
 	 * @throws various exception to explaining why customer is not added.
 	 * 
-	 * @see com.firisbe.error.ResponseErrorHandler class to see possible errors
+	 * @see com.multipay.customer_and_query_service.error.ResponseErrorHandler class to see possible errors
 	 *      might be thrown from here
 	 * 
 	 */
-	@Operation(summary = "Add customer", description = "Adds  new customer to our database")
+	@Operation(summary = "Add customer", description = "Adds  new customer to  database")
 	@ApiResponses({
 			@ApiResponse(responseCode = "201", description = "When customer is successfully saved to data base"),
 			@ApiResponse(responseCode = "400", description = "Bad Request", content = {
@@ -79,7 +81,7 @@ public class CustomerController {
 			@ApiResponse(responseCode = "409", description = "When submitted data is in conflict with existing data in database or with itself", content = {
 					@Content(schema = @Schema(implementation = ErrorDetails.class)) }) })
 	@PostMapping("/add-customer")
-	public ResponseEntity<String> addCustomer(@Valid @RequestBody Customer customer) throws Exception {
+	public ResponseEntity<String> addCustomer(@Valid @RequestBody AddCustomerRequestDTO customer) throws Exception {
 
 		Customer addedCustomer = null;
 
@@ -101,19 +103,19 @@ public class CustomerController {
 	 * @return List of customer objects
 	 * @throws various exception to explaining why customer could not be fetched.
 	 * 
-	 * @see com.firisbe.error.ResponseErrorHandler class to see possible errors
+	 * @see com.multipay.customer_and_query_service.error.ResponseErrorHandler class to see possible errors
 	 *      might be thrown from here
 	 * 
 	 */
-	@Operation(summary = "Fetch all customers", description = "Fetches all customers exist in our database")
+	@Operation(summary = "Fetch all customers", description = "Fetches all customers from database")
 	@ApiResponses({ @ApiResponse(responseCode = "200", content = {
-			@Content(array = @ArraySchema(schema = @Schema(implementation = Customer.class)), mediaType = "application/json") }),
+			@Content(array = @ArraySchema(schema = @Schema(implementation = CustomerDTO.class)), mediaType = "application/json") }),
 			@ApiResponse(responseCode = "500", description = "When error being occured during querying database", content = {
 					@Content(schema = @Schema(implementation = ErrorDetails.class)) }) })
 	@GetMapping("/get-all-customers")
-	public List<Customer> getAllCustomers() throws Exception {
+	public List<CustomerDTO> getAllCustomers() throws Exception {
 
-		List<Customer> allCustomers = null;
+		List<CustomerDTO> allCustomers = null;
 
 		try {
 			allCustomers = customerService.getAllCustomers();

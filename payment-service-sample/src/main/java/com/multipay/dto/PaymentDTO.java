@@ -1,59 +1,45 @@
-package com.multipay.model;
+/**
+ * This package is for data transfer objects (DTO) to transfer data over web while communicating with this API
+ */
+package com.multipay.dto;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "payments")
+/**
+ * 
+ * Objects of this class are used to transfer data over web.
+ * 
+ * 
+ * @author Ozgur Yatmaz
+ * @version 1.0.0
+ * @since 2024-05-06
+ * 
+ */
+
 @Schema(description = "Payment Model Information")
-public class Payment {
+public class PaymentDTO {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonIgnore
-	private Integer id;
 	@Schema(description = "payment amount", example = "19.57")
 	private double amount;
 
-	@Column(name = "card_number")
 	@Schema(description = "Card number of the payment made", example = "571-1")
 	private String cardNumber;
-	@Column(name = "customer_number")
 	@Schema(description = "Payment owner's number", example = "114-1")
 	private String customerNumber;
-
-	@Schema(description = "Mark for xxternal payment service provider", example = "Service1")
-	private String paymentProvider;
 
 	@Schema(description = "Time when payment is processed", example = "2024-04-26 01:36:09.759075")
 	private LocalDateTime paymentDate;
 
-	// No-argument constructor (for JPA)
-	public Payment() {
-	}
-
-	public Payment(double amount, String cardNumber, String customerNumber, LocalDateTime paymentDate) {
+	public PaymentDTO(double amount, String cardNumber, String customerNumber, LocalDateTime paymentDate) {
 		this.amount = amount;
 		this.cardNumber = cardNumber;
 		this.customerNumber = customerNumber;
 		this.paymentDate = paymentDate;
 	}
 
-	public String getPaymentProvider() {
-		return paymentProvider;
-	}
-
-	public void setPaymentProvider(String paymentProvider) {
-		this.paymentProvider = paymentProvider;
+	public PaymentDTO() {
 	}
 
 	public String getCardNumber() {
@@ -62,14 +48,6 @@ public class Payment {
 
 	public void setCardNumber(String cardNumber) {
 		this.cardNumber = cardNumber;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public double getAmount() {

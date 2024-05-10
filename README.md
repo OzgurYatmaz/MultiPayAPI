@@ -13,7 +13,7 @@ In this version it is possible to send payment requests to many external payment
 
  
 ### How to test api
-1. Create scheama in mysql database with following command "CREATE SCHEMA `firisbe-payment' "
+1. Create scheama in mysql database with following command "CREATE SCHEMA `multipay' "
 2. Use the Mockoon collection provided <a href=API-Documents>here</a>
 3. Use the url below to test with swagger <br>
    http://localhost:8080/swagger-ui/index.html

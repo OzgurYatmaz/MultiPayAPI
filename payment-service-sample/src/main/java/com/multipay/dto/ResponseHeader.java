@@ -1,4 +1,4 @@
-package com.multipay.beans;
+package com.multipay.dto;
 
 public class ResponseHeader {
 

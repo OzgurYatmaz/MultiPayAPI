@@ -18,8 +18,11 @@ import org.springframework.util.CollectionUtils;
 import com.multipay.customer_and_query_service.error.DataInsertionConftlictException;
 import com.multipay.customer_and_query_service.error.RecordCouldNotBeSavedException;
 import com.multipay.customer_and_query_service.error.RecordsNotBeingFetchedException;
-import com.multipay.model.Card;
-import com.multipay.model.Customer;
+import com.multipay.dto.AddCustomerRequestDTO;
+import com.multipay.dto.CardDTO;
+import com.multipay.dto.CustomerDTO;
+import com.multipay.entity.Card;
+import com.multipay.entity.Customer;
 import com.multipay.repository.CardRepository;
 import com.multipay.repository.CustomerRepository;
 
@@ -71,9 +74,10 @@ public class CustomerService {
 	 * 
 	 * 
 	 */
-	public List<Customer> getAllCustomers() throws Exception {
+	public List<CustomerDTO> getAllCustomers() throws Exception {
 		try {
-			List<Customer> customers = customerRepository.findAll();
+			List<Customer> customersFetched = customerRepository.findAll();
+			List<CustomerDTO> customers = convertCustomerEntityToDTO(customersFetched);
 			return customers;
 		} catch (Exception e) {
 			LOGGER.error("Error occurred while retrieving customers", e);
@@ -82,6 +86,33 @@ public class CustomerService {
 
 	}
 
+	/**
+	 * 
+	 * Entity object fetched from database is converted to DTO object for web service return.
+	 * 
+	 * @param entity object fetched from database.
+	 * 
+	 * @return DTO object for API return type.
+	 * 
+	 * 
+	 */
+	private List<CustomerDTO> convertCustomerEntityToDTO(List<Customer> customersFetched) {
+		if (!CollectionUtils.isEmpty(customersFetched)) {
+			List<CustomerDTO> customers = new ArrayList<CustomerDTO>();
+			for (Customer c : customersFetched) {
+				CustomerDTO tempCustomer = new CustomerDTO();
+				tempCustomer.setCustomerNumber(c.getCustomerNumber());
+				tempCustomer.setName(c.getName());
+				tempCustomer.setEmail(c.getEmail());
+				customers.add(tempCustomer);
+			}
+
+			return customers;
+
+		}
+		return null;
+	}
+	
 	/**
 	 * 
 	 * Adds customer to database if customer object includes cards it will also adds
@@ -95,10 +126,13 @@ public class CustomerService {
 	 * 
 	 * 
 	 */
-	public Customer addCustomer(Customer customer) throws DataInsertionConftlictException {
+	public Customer addCustomer(AddCustomerRequestDTO addCustomerRequest) throws DataInsertionConftlictException {
 
-		// checks if email provided is already used for another customer
+
+		Customer customer = convertDTO_To_Entity(addCustomerRequest);
+		
 		Customer savedCustomer = null;
+		// checks if email provided is already used for another customer
 		if (!customerRepository.existsByEmail(customer.getEmail())) {
 
 			// if no card is specified with request body a default card will be assigned to
@@ -128,6 +162,37 @@ public class CustomerService {
 		}
 
 		return savedCustomer;
+	}
+	
+	/**
+	 * 
+	 * request dto object is being converted to entity object to be handled JPA.
+	 * 
+	 * @param request body object for transmitting data in web.
+	 * 
+	 * @return customer entity object to be saved database by JPA.
+	 * 
+	 * 
+	 */
+	private Customer convertDTO_To_Entity(AddCustomerRequestDTO addCustomerRequest) {
+
+		Customer customer = new Customer();
+		customer.setName(addCustomerRequest.getName());
+		customer.setEmail(addCustomerRequest.getEmail());
+		customer.setCustomerNumber(addCustomerRequest.getCustomerNumber());
+		List<CardDTO> cards = addCustomerRequest.getCards();
+		if (!CollectionUtils.isEmpty(cards)) {
+			List<Card> newCards = new ArrayList<Card>();
+			for (CardDTO card : cards) {
+				Card tempCard = new Card();
+				tempCard.setCardNumber(card.getCardNumber());
+				tempCard.setCustomerNumber(addCustomerRequest.getCustomerNumber());
+				tempCard.setBalance(card.getBalance());
+				newCards.add(tempCard);
+			}
+			customer.setCards(newCards);
+		}
+		return customer;
 	}
 
 	/**

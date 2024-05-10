@@ -1,4 +1,4 @@
-package com.multipay.beans;
+package com.multipay.utils;
 
 public enum MessageEnums {
 

@@ -15,17 +15,17 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.multipay.beans.MessageEnums;
-import com.multipay.beans.ProcessPaymentRequest;
-import com.multipay.beans.ProcessPaymentResponse;
-import com.multipay.beans.ResponseHeader;
 import com.multipay.configuration.PaymentServiceParameters;
+import com.multipay.dto.ProcessPaymentRequestDTO;
+import com.multipay.dto.ProcessPaymentResponseDTO;
+import com.multipay.dto.ResponseHeader;
+import com.multipay.entity.Card;
+import com.multipay.entity.Payment;
+import com.multipay.entity.TechnicalException;
 import com.multipay.integration.external.service1.dto.ExternalService1PaymentResponseDTO;
-import com.multipay.model.Card;
-import com.multipay.model.Payment;
-import com.multipay.model.TechnicalException;
 import com.multipay.repository.CardRepository;
 import com.multipay.repository.PaymentRepository;
+import com.multipay.utils.MessageEnums;
 
 @Component
 public class PaymentService1Client {
@@ -46,12 +46,12 @@ public class PaymentService1Client {
 		objectMapper = new ObjectMapper();
 	}
 
-	public ProcessPaymentResponse processPayment(ProcessPaymentRequest paymentRequest, Card card) throws TechnicalException {
+	public ProcessPaymentResponseDTO processPayment(ProcessPaymentRequestDTO paymentRequest, Card card) throws TechnicalException {
 		// create an object for external service's request body. This is just dummy
 		Payment payment = prepareExternalRequest(paymentRequest, card);
 
 		ResponseEntity<ExternalService1PaymentResponseDTO> responseEntity = null;
-		ProcessPaymentResponse response;
+		ProcessPaymentResponseDTO response;
 		try {
 
 			// Call the external payment service
@@ -75,7 +75,7 @@ public class PaymentService1Client {
 		return response;
 	}
 
-	private ResponseEntity<ExternalService1PaymentResponseDTO> sendPaymentRequestToExternalService(ProcessPaymentRequest externalRequest)
+	private ResponseEntity<ExternalService1PaymentResponseDTO> sendPaymentRequestToExternalService(ProcessPaymentRequestDTO externalRequest)
 			throws  TechnicalException, JsonProcessingException {
 
 		String jsonRequest = objectMapper.writeValueAsString(externalRequest);
@@ -113,7 +113,7 @@ public class PaymentService1Client {
 		}
 	}
 
-	private Payment prepareExternalRequest(ProcessPaymentRequest paymentRequest, Card card) {
+	private Payment prepareExternalRequest(ProcessPaymentRequestDTO paymentRequest, Card card) {
 		Payment payment = new Payment();
 		payment.setCardNumber(card.getCardNumber());
 		payment.setAmount(paymentRequest.getAmount());
@@ -124,10 +124,10 @@ public class PaymentService1Client {
 		return payment;
 	}
 
-	private ProcessPaymentResponse processExternalResponse(Payment payment, ResponseEntity<ExternalService1PaymentResponseDTO> responseEntity,
+	private ProcessPaymentResponseDTO processExternalResponse(Payment payment, ResponseEntity<ExternalService1PaymentResponseDTO> responseEntity,
 			Integer cardId, long responseTime) throws TechnicalException {
 
-		ProcessPaymentResponse response = new ProcessPaymentResponse();
+		ProcessPaymentResponseDTO response = new ProcessPaymentResponseDTO();
 		ResponseHeader header = new ResponseHeader();
 		if (ObjectUtils.isNotEmpty(responseEntity) && ObjectUtils.isNotEmpty(responseEntity.getBody())) {
 			 

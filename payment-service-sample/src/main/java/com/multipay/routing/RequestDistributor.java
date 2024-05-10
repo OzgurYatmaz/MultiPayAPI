@@ -15,13 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import com.multipay.beans.MessageEnums;
-import com.multipay.beans.ProcessPaymentRequest;
-import com.multipay.beans.ProcessPaymentResponse;
-import com.multipay.model.Card;
+import com.multipay.dto.ProcessPaymentRequestDTO;
+import com.multipay.dto.ProcessPaymentResponseDTO;
+import com.multipay.entity.Card;
 import com.multipay.routing.dispatchers.MultiPayDispatcher;
 import com.multipay.routing.dispatchers.PaymentService1;
 import com.multipay.routing.dispatchers.PaymentService2;
+import com.multipay.utils.MessageEnums;
 import com.multipay.utils.ResponseUtils;
 
 /**
@@ -113,12 +113,12 @@ public class RequestDistributor {
 	 *         failed.
 	 * 
 	 */
-	public ProcessPaymentResponse startPayment(ProcessPaymentRequest paymentRequest, Card card) {
+	public ProcessPaymentResponseDTO startPayment(ProcessPaymentRequestDTO paymentRequest, Card card) {
 
 		MultiPayDispatcher selectedDispatcher = getDispatcher(paymentRequest.getProviderId());
 
 		if (selectedDispatcher == null) {
-			ProcessPaymentResponse response = new ProcessPaymentResponse();
+			ProcessPaymentResponseDTO response = new ProcessPaymentResponseDTO();
 			responseUtils.setStatusAsFailed(response, MessageEnums.INVALID_PROVIDER_ID.getMessageCode(), null,
 					paymentRequest.getProviderId());
 			return response;

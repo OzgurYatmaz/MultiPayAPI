@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.multipay.beans.MessageEnums;
-import com.multipay.beans.ProcessPaymentRequest;
-import com.multipay.beans.ProcessPaymentResponse;
-import com.multipay.model.Card;
+import com.multipay.dto.ProcessPaymentRequestDTO;
+import com.multipay.dto.ProcessPaymentResponseDTO;
+import com.multipay.entity.Card;
 import com.multipay.repository.CardRepository;
 import com.multipay.routing.RequestDistributor;
+import com.multipay.utils.MessageEnums;
 import com.multipay.utils.ResponseUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,8 +28,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  * 
  * 
  */
-@RequestMapping("/multipay/rest/payment")
-@Tag(name = "Transaction controller", description = "Make  and query payments") // For Swagger
+@RequestMapping("/multipay/payments")
+@Tag(name = "Transaction controller", description = "Make  payments") // For Swagger
 @RestController
 public class MultiPayRestService {
 
@@ -40,7 +40,7 @@ public class MultiPayRestService {
 	 */
 	@Autowired
 	private ResponseUtils responseUtils;
-	
+
 	/**
 	 * 
 	 * Card related operations is done with this
@@ -74,12 +74,12 @@ public class MultiPayRestService {
 	 * 
 	 */
 	@RequestMapping(value = "/startPayment", method = RequestMethod.POST)
-	@Operation(summary = "Start Payment", description = "Sends request to external payment services")
-	public ProcessPaymentResponse startPayment(@RequestBody ProcessPaymentRequest paymentRequest) {
+	@Operation(summary = "Makes Payment from the balance of the card", description = "Makes payment from balance of the card by using the selected external payment service provider and records payment info to database")
+	public ProcessPaymentResponseDTO startPayment(@RequestBody ProcessPaymentRequestDTO paymentRequest) {
 
 		long startTime = System.currentTimeMillis(), finishTime = 0;
-		
-		ProcessPaymentResponse response = new ProcessPaymentResponse();
+
+		ProcessPaymentResponseDTO response = new ProcessPaymentResponseDTO();
 		if (!cardRepository.existsByCardNumber(paymentRequest.getCardNumber())) {
 			responseUtils.setStatusAsFailed(response, MessageEnums.CARD_NOT_EXIST.getMessageCode(), null,
 					paymentRequest.getProviderId());
@@ -99,7 +99,7 @@ public class MultiPayRestService {
 			return response;
 		}
 		response = distributorBean.startPayment(paymentRequest, card);
-		
+
 		finishTime = System.currentTimeMillis();
 		responseUtils.setResponseTime(response, startTime, finishTime);
 		return response;

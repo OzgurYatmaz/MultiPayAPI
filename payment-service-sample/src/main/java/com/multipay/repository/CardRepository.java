@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.multipay.model.Card;
+import com.multipay.entity.Card;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

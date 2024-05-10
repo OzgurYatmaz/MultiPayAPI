@@ -6,12 +6,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.multipay.beans.MessageEnums;
-import com.multipay.beans.ProcessPaymentRequest;
-import com.multipay.beans.ProcessPaymentResponse;
+import com.multipay.dto.ProcessPaymentRequestDTO;
+import com.multipay.dto.ProcessPaymentResponseDTO;
+import com.multipay.entity.Card;
+import com.multipay.entity.TechnicalException;
 import com.multipay.integration.external.service2.PaymentService2Client;
-import com.multipay.model.Card;
-import com.multipay.model.TechnicalException;
+import com.multipay.utils.MessageEnums;
 import com.multipay.utils.ResponseUtils;
 
 @Component
@@ -31,12 +31,12 @@ public class PaymentService2 extends AbstractDispatcher {
 	private PaymentService2Client paymentService2;
 
 	@Override
-	public ProcessPaymentResponse startPayment(ProcessPaymentRequest startPaymentRequest, Card card) {
+	public ProcessPaymentResponseDTO startPayment(ProcessPaymentRequestDTO startPaymentRequest, Card card) {
 		if (LOGGER.isInfoEnabled()) {
 			LOGGER.info("startPayment function started ");
 		}
 
-		ProcessPaymentResponse response = new ProcessPaymentResponse();
+		ProcessPaymentResponseDTO response = new ProcessPaymentResponseDTO();
 		try {
 			response = paymentService2.processPayment(startPaymentRequest, card);
 			responseUtils.setStatusAsSuccess(response, 1);

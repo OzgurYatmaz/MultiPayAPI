@@ -61,15 +61,20 @@ public class OpenAPIConfig {
 
 		License mitLicense = new License().name("MIT License").url("https://choosealicense.com/licenses/mit/");
 
-		Info info = new Info().title("SecurePay API for Firisbe Interview").version("1.0").contact(contact).description(
-				"This API exposes endpoints to use sample payment service. Service anables saving customers and cards of the customers to mysql database "
-						+ "and requesting payments to any number of external payment service providers. And if external payment service"
+		Info info = new Info().title("MultiPay API").version("1.0.0").contact(contact).description(
+				"This API is a sample payment service integrated to multiple external payment service providers "
+				+ " (Two sample service is integrated currently but there is not limit). Service anables saving customers and cards of"
+				+ " the customers to mysql database and requesting payments to selected (selection is made with providerId field and "
+				+ "currenly 1 and 2 are selectable) external payment service providers. And if external payment service"
 						+ " confirms that the payment is made card balance is updated and payment is recorded to payments table."
-						+ " Lastly, all payments can be queried by date interval or curtomer number or card number.<br />\r\n"
-						+ "     <br /> Tech Stack:\r\n" + "     <br />\r\n" + "     <br /> Language: Java 17\r\n"
-						+ "     <br /> Framework: Spring Boot 3.2.5\r\n" + "     <br /> Database: MySql\r\n"
+						+ "     <br /> Lastly, all payments can be queried by date interval or curtomer number or card number.<br />\r\n"
+						+ "     <br /> Tech Stack:\r\n" + "     <br />\r\n" 
+						+ "     <br /> Language: Java 17\r\n"
+						+ "     <br /> Framework: Spring Boot 3.2.5\r\n" 
+						+ "     <br /> Database: MySql\r\n"
 						+ "     <br /> DB Management: Spring Data JPA\r\n"
 						+ "     <br /> Unit Tests: JUnit and Maven Surefire for test reports\r\n"
+						+ "     <br /> Documentation: Swagger 3 - (OpenAPI)\r\n"
 						+ "     <br /> Build Tool: Maven")
 				.license(mitLicense);
 

@@ -18,7 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * 
  */
 
-@Schema(description = "Payment Model Information")
+@Schema(description = "Payment DTO for trasfering payment data")
 public class PaymentDTO {
 
 	@Schema(description = "payment amount", example = "19.57")

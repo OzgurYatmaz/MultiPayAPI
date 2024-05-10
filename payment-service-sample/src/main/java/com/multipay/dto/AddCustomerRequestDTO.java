@@ -26,7 +26,7 @@ import jakarta.validation.constraints.NotNull;
  * 
  */
 
-@Schema(description = "Customer Model Information")
+@Schema(description = "DTO for adding customer to database")
 public class AddCustomerRequestDTO {
 	
 

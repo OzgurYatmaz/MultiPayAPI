@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * 
  */
 
-@Schema(description = "Customer DTO for fetch all customers response")
+@Schema(description = "Customer DTO for trasfering customer data")
 public class CustomerDTO {
 
 	@Schema(description = "Customer's name", example = "Ozgur")

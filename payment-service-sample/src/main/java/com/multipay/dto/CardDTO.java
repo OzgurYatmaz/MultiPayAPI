@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * 
  */
 
-@Schema(description = "Card Model Information")
+@Schema(description = "Card DTO for trasfering card data")
 public class CardDTO {
 
 	@Schema(description = "Card number", example = "571-1")

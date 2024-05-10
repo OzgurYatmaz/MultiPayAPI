@@ -4,6 +4,8 @@
  */
 package com.multipay.controller;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.multipay.dto.ProcessPaymentRequestDTO;
 import com.multipay.dto.ProcessPaymentResponseDTO;
 import com.multipay.entity.Card;
+import com.multipay.entity.Payment;
 import com.multipay.repository.CardRepository;
+import com.multipay.repository.PaymentRepository;
 import com.multipay.routing.RequestDistributor;
 import com.multipay.utils.MessageEnums;
 import com.multipay.utils.ResponseUtils;
@@ -43,7 +47,7 @@ public class MultiPayRestService {
 
 	/**
 	 * 
-	 * Card related operations is done with this
+	 * Card related operations in database is done with this
 	 * 
 	 */
 	@Autowired
@@ -51,8 +55,16 @@ public class MultiPayRestService {
 
 	/**
 	 * 
+	 * Payment related operations in database is done with this
+	 * 
+	 */
+	@Autowired
+	private PaymentRepository paymentRepository;
+	
+	/**
+	 * 
 	 * Required for routing the payment request to selected external payment service
-	 * provider.
+	 * provider. It routes with providerId field of the request object
 	 * 
 	 */
 	@Autowired
@@ -100,9 +112,28 @@ public class MultiPayRestService {
 		}
 		response = distributorBean.startPayment(paymentRequest, card);
 
+		if(response.getResponseHeader().isSuccessful()) {
+			cardRepository.updateBalanceAfterPayment(card.getId(), paymentRequest.getAmount());
+			
+			Payment payment = preparePaymentInfoForDatabase(paymentRequest, card);
+			paymentRepository.save(payment);
+			
+			responseUtils.setStatusAsSuccess(response, 1);
+		}
 		finishTime = System.currentTimeMillis();
 		responseUtils.setResponseTime(response, startTime, finishTime);
 		return response;
 	}
 
+	
+	private Payment preparePaymentInfoForDatabase(ProcessPaymentRequestDTO paymentRequest, Card card) {
+		Payment payment = new Payment();
+		payment.setCardNumber(card.getCardNumber());
+		payment.setAmount(paymentRequest.getAmount());
+		LocalDateTime paymentTime = LocalDateTime.now();
+		payment.setPaymentDate(paymentTime);
+		payment.setCustomerNumber(card.getCustomerNumber());
+		payment.setPaymentProvider("SERVICE-1");
+		return payment;
+	}
 }

@@ -1,8 +1,9 @@
+/**
+ * This package is part of integration layer and for sample client1
+ */
 package com.multipay.integration.external.service1;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
-
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,13 +21,22 @@ import com.multipay.dto.ProcessPaymentRequestDTO;
 import com.multipay.dto.ProcessPaymentResponseDTO;
 import com.multipay.dto.ResponseHeader;
 import com.multipay.entity.Card;
-import com.multipay.entity.Payment;
 import com.multipay.entity.TechnicalException;
 import com.multipay.integration.external.service1.dto.ExternalService1PaymentResponseDTO;
-import com.multipay.repository.CardRepository;
-import com.multipay.repository.PaymentRepository;
 import com.multipay.utils.MessageEnums;
 
+/**
+ * 
+ * Class responsible to communicate external payment service provider 1
+ * 
+ * @throws Various exceptions explaining the reasons of failures.
+ * 
+ * 
+ * @author Ozgur Yatmaz
+ * @version 1.0.0
+ * @since 2024-05-10
+ * 
+ */
 @Component
 public class PaymentService1Client {
 
@@ -34,11 +44,7 @@ public class PaymentService1Client {
 
 	@Autowired
 	private PaymentServiceParameters configParameters;
-	@Autowired
-	private CardRepository cardRepository;
 
-	@Autowired
-	private PaymentRepository paymentRepository;
 
 	private ObjectMapper objectMapper = null;
 
@@ -47,9 +53,7 @@ public class PaymentService1Client {
 	}
 
 	public ProcessPaymentResponseDTO processPayment(ProcessPaymentRequestDTO paymentRequest, Card card) throws TechnicalException {
-		// create an object for external service's request body. This is just dummy
-		Payment payment = prepareExternalRequest(paymentRequest, card);
-
+		
 		ResponseEntity<ExternalService1PaymentResponseDTO> responseEntity = null;
 		ProcessPaymentResponseDTO response;
 		try {
@@ -58,7 +62,7 @@ public class PaymentService1Client {
 			long startTime = System.currentTimeMillis();
 			responseEntity = sendPaymentRequestToExternalService(paymentRequest);
 			long finishTime = System.currentTimeMillis();
-			response = processExternalResponse(payment, responseEntity, card.getId(), finishTime - startTime);
+			response = processExternalResponse(responseEntity, finishTime - startTime);
 
 		}catch (TechnicalException ex) {
 
@@ -113,34 +117,21 @@ public class PaymentService1Client {
 		}
 	}
 
-	private Payment prepareExternalRequest(ProcessPaymentRequestDTO paymentRequest, Card card) {
-		Payment payment = new Payment();
-		payment.setCardNumber(card.getCardNumber());
-		payment.setAmount(paymentRequest.getAmount());
-		LocalDateTime paymentTime = LocalDateTime.now();
-		payment.setPaymentDate(paymentTime);
-		payment.setCustomerNumber(card.getCustomerNumber());
-		payment.setPaymentProvider("SERVICE-1");
-		return payment;
-	}
-
-	private ProcessPaymentResponseDTO processExternalResponse(Payment payment, ResponseEntity<ExternalService1PaymentResponseDTO> responseEntity,
-			Integer cardId, long responseTime) throws TechnicalException {
+	private ProcessPaymentResponseDTO processExternalResponse(ResponseEntity<ExternalService1PaymentResponseDTO> responseEntity,
+			 long responseTime) throws TechnicalException {
 
 		ProcessPaymentResponseDTO response = new ProcessPaymentResponseDTO();
 		ResponseHeader header = new ResponseHeader();
 		if (ObjectUtils.isNotEmpty(responseEntity) && ObjectUtils.isNotEmpty(responseEntity.getBody())) {
 			 
-			
 			if (responseEntity.getStatusCode() == HttpStatus.OK) {
-				// only successful payments are saved to DB for now.
-				paymentRepository.save(payment);
-				cardRepository.updateBalanceAfterPayment(cardId, payment.getAmount());
+				header.setSuccessful(true);
 			} else {
 				LOGGER.error("Payment response received indicates the failure of payment: ");
+				header.setDescription(responseEntity.getBody().getStatus());
+				header.setCode(responseEntity.getBody().getCode()+"");
+				header.setSuccessful(false);
 			}
-			header.setDescription(responseEntity.getBody().getStatus());
-			header.setCode(responseEntity.getBody().getCode()+"");
 		} else {
 			throw new TechnicalException(MessageEnums.OPERATION_RESPONSE_NULL.getWsCode(), "External service error response is null");
 		}

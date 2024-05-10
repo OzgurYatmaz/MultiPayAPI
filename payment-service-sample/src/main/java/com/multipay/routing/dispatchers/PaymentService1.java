@@ -39,7 +39,6 @@ public class PaymentService1 extends AbstractDispatcher {
 		ProcessPaymentResponseDTO response = new ProcessPaymentResponseDTO();
 		try {
 			response = paymentService1.processPayment(startPaymentRequest, card);
-			processPaymentResult(response);
 			
 		} catch (TechnicalException e) {
 			StringBuilder builder = new StringBuilder();
@@ -89,14 +88,5 @@ public class PaymentService1 extends AbstractDispatcher {
 		return response;
 	}
 
-	private void processPaymentResult(ProcessPaymentResponseDTO response) {
-		if(response.getResponseHeader().getCode().equals("0")) {
-			responseUtils.setStatusAsSuccess(response, 1);
-		}else {
-			response.getResponseHeader().setSuccessful(false);
-		}
-		response.setProviderId(1);
-		
-	}
 
 }

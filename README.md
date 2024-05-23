@@ -1,5 +1,5 @@
 # Spring Boot Project Simulating a Payment API Integrated with Multiple Mock Payment Service Providers
-## (This project will be converted to multi-modular structure soon)
+## (This project need to be converted to multi-modular structe and currently thank-Allah I don't have resources to do it)
 
 This is the improved version of the [following](https://github.com/OzgurYatmaz/FirisbeInterview) project. 
 
